@@ -1,0 +1,25 @@
+
+'bank0ROM'    =  808000
+'backchannel' =  80FF10
+'vjdata'      =  80FF80
+'vecdata'     =  80FFE4
+'bank1ROM'    =  810000
+'bank2ROM'    =  818000
+'bank3ROM'    =  820000
+'bank4ROM'    =  828000
+'bank5ROM'    =  830000
+'bank6ROM'    =  838000
+'bank7ROM'    =  840000
+'bank8ROM'    =  848000
+'bank9ROM'    =  850000
+'bankAROM'    =  858000
+'bankBROM'    =  860000
+'bankCROM'    =  868000
+'bankDROM'    =  870000
+'bankEROM'    =  878000
+'bankFROM'    =  880000
+'bank10ROM'   =  888000
+'bank11ROM'   =  890000
+'bank12ROM'   =  898000
+'bank13ROM'   =  8A0000
+

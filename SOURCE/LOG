@@ -1,0 +1,239 @@
+Crash Barrier  METAi Assembler   7.00  Build 1290, 14/05/93 15:50:26 
+Copyright (C) 1987-1992  Crash Barrier LTD.  All rights reserved.
+
+	320K Symbol Stg   Listing File [C:\META\SOURCE\GAME.LST]: 	C:\META\SOURCE\65C816.TAB  	111K free 
+Pass 1 :   0% ° Pass 1 :   0% ± Pass 1 :   3% ² Pass 1 :   3% Û Pass 1 :   8% ° Pass 1 :   8% ± Pass 1 :  12% ² Pass 1 :  12% Û Pass 1 :  18% ° Pass 1 :  18% ± Pass 1 :  20% ² Pass 1 :  20% Û Pass 1 :  22% ° Pass 1 :  22% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  23% ° Pass 1 :  23% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  23% ° Pass 1 :  23% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  23% ° Pass 1 :  23% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  23% ° Pass 1 :  23% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  23% ° Pass 1 :  23% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  23% ° Pass 1 :  23% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  23% ° Pass 1 :  23% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  23% ° Pass 1 :  23% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  23% ° Pass 1 :  23% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  23% ° Pass 1 :  23% ± Pass 1 :  23% ² Pass 1 :  23% Û Pass 1 :  28% ° Pass 1 :  28% ± Pass 1 :  34% ² Pass 1 :  34% Û Pass 1 :  39% ° Pass 1 :  39% ± Pass 1 :  44% ² Pass 1 :  44% Û Pass 1 :  49% ° Pass 1 :  49% ± Pass 1 :  53% ² Pass 1 :  53% Û Pass 1 :  57% ° Pass 1 :  57% ± Pass 1 :  62% ² Pass 1 :  62% Û Pass 1 :  67% ° Pass 1 :  67% ± Pass 1 :  72% ² Pass 1 :  72% Û Pass 1 :  77% ° Pass 1 :  77% ± Pass 1 :  79% ² Pass 1 :  79% Û Pass 1 :  79% ° Pass 1 :  79% ± Pass 1 :  79% ² Pass 1 :  79% Û Pass 1 :  79% ° Pass 1 :  79% ± Pass 1 :  79% ² Pass 1 :  79% Û Pass 1 :  79% ° Pass 1 :  79% ± Pass 1 :  79% ² Pass 1 :  79% Û Pass 1 :  79% ° Pass 1 :  79% ± Pass 1 :  79% ² Pass 1 :  79% Û Pass 1 :  79% ° Pass 1 :  79% ± Pass 1 :  79% ² Pass 1 :  79% Û Pass 1 :  79% ° Pass 1 :  79% ± Pass 1 :  79% ² Pass 1 :  79% Û Pass 1 :  79% ° Pass 1 :  79% ± Pass 1 :  79% ² Pass 1 :  79% Û Pass 1 :  84% ° Pass 1 :  84% ± Pass 1 :  88% ² Pass 1 :  88% Û Pass 1 :  92% ° Pass 1 :  92% ± Pass 1 :  99% ² Pass 1 :  99% Û Pass 2 :   2% ° Pass 2 :   2% ± Pass 2 :   5% ² Pass 2 :   5% Û Pass 2 :   8% ° Pass 2 :   8% ± Pass 2 :   9% ² Pass 2 :   9% Û Pass 2 :  11% ° Pass 2 :  11% ± Pass 2 :  13% ² Pass 2 :  13% Û Pass 2 :  14% ° Pass 2 :  14% ± Pass 2 :  16% ² Pass 2 :  16% Û Pass 2 :  18% ° Pass 2 :  18% ± Pass 2 :  20% ² Pass 2 :  20% Û Pass 2 :  21% ° Pass 2 :  21% ± Pass 2 :  23% ² Pass 2 :  23% Û Pass 2 :  24% ° Pass 2 :  24% ± Pass 2 :  26% ² Pass 2 :  26% Û Pass 2 :  27% ° Pass 2 :  27% ± Pass 2 :  29% ² Pass 2 :  29% Û Pass 2 :  30% ° Pass 2 :  30% ± Pass 2 :  32% ² Pass 2 :  32% Û Pass 2 :  33% ° Pass 2 :  33% ± Pass 2 :  35% ² Pass 2 :  35% Û Pass 2 :  36% ° Pass 2 :  36% ± Pass 2 :  38% ² Pass 2 :  38% Û Pass 2 :  39% ° Pass 2 :  39% ± Pass 2 :  40% ² Pass 2 :  40% Û Pass 2 :  42% ° Pass 2 :  42% ± Pass 2 :  44% ² Pass 2 :  44% Û Pass 2 :  46% ° Pass 2 :  46% ± Pass 2 :  48% ² Pass 2 :  48% Û Pass 2 :  50% ° Pass 2 :  50% ± Pass 2 :  51% ² Pass 2 :  51% Û Pass 2 :  53% ° Pass 2 :  53% ± Pass 2 :  55% ² Pass 2 :  55% Û Pass 2 :  56% ° Pass 2 :  56% ± Pass 2 :  58% ² Pass 2 :  58% Û Pass 2 :  59% ° Pass 2 :  59% ± Pass 2 :  61% ² Pass 2 :  61% Û Pass 2 :  63% ° Pass 2 :  63% ± Pass 2 :  65% ² Pass 2 :  65% Û Pass 2 :  66% ° Pass 2 :  66% ± Pass 2 :  68% ² Pass 2 :  68% Û Pass 2 :  70% ° Pass 2 :  70% ± Pass 2 :  72% ² Pass 2 :  72% Û Pass 2 :  74% ° Pass 2 :  74% ± Pass 2 :  75% ² Pass 2 :  75% Û Pass 2 :  77% ° Pass 2 :  77% ±   C:\META\SOURCE\MACROS.ASM(144): as2 : Error 51: Phase Inconsistency (P1: 20, P2: 0) '_0'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ c:\meta\source\scroll.asm(75): as2 : (Macro Call) : TABLE	0,31,32,0	; A=0 TO 31 V=A*64 + 0
+ C:\META\SOURCE\SCROLL.ASM(77): as2 : Error 51: Phase Inconsistency (P1: 3FF8, P2: 3FBA) 'GMAP_L'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+Pass 2 :  79% ² Pass 2 :  79% Û   C:\META\SOURCE\MACROS.ASM(144): as2 : Error 51: Phase Inconsistency (P1: 3D, P2: 0) '_1'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ c:\meta\source\scroll.asm(78): as2 : (Macro Call) : TABLE	0,MAPY,MAPX MULT 2,MADEUP_MAP	; 0 TO 160-2
+  C:\META\SOURCE\MACROS.ASM(57): as2 : Error 51: Phase Inconsistency (P1: 4072, P2: 3FBC) 'SCROLL_UPDATE'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ c:\meta\source\scroll.asm(91): as2 : (Macro Call) : ShortA
+Num: 40E5 (int REL .l),  End
+ C:\META\SOURCE\SCROLL.ASM(116): as2 : Error 54: Can't match Addressing mode '	BEQ	NO_CHANGE'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+Num: 40A7 (int REL .l),  End
+ C:\META\SOURCE\SCROLL.ASM(119): as2 : Error 54: Can't match Addressing mode '	BCS	RIGHT_SIDE'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+Num: 40B5 (int REL .l),  End
+ C:\META\SOURCE\SCROLL.ASM(123): as2 : Error 54: Can't match Addressing mode '	BRA	SET_REST'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(124): as2 : Error 51: Phase Inconsistency (P1: 40A7, P2: 3FEE) 'RIGHT_SIDE'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(131): as2 : Error 51: Phase Inconsistency (P1: 40B5, P2: 3FFC) 'SET_REST'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(141): as2 : Error 51: Phase Inconsistency (P1: 40C6, P2: 400D) 'COPY_STRIP'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+Num: 40C6 (int REL .l),  End
+ C:\META\SOURCE\SCROLL.ASM(153): as2 : Error 54: Can't match Addressing mode '	BNE	COPY_STRIP'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(158): as2 : Error 51: Phase Inconsistency (P1: 40E5, P2: 402B) 'NO_CHANGE'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+Num: 4124 (int REL .l),  End
+ C:\META\SOURCE\SCROLL.ASM(159): as2 : Error 54: Can't match Addressing mode '	BEQ	NO_CHANGE1'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+Num: 40F1 (int REL .l),  End
+ C:\META\SOURCE\SCROLL.ASM(162): as2 : Error 54: Can't match Addressing mode '	BCC	SET_REST1	; TOP_SIDE @ 0'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(164): as2 : Error 51: Phase Inconsistency (P1: 40F1, P2: 4035) 'SET_REST1'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+Pass 2 :  80% ° Pass 2 :  80% ±  C:\META\SOURCE\SCROLL.ASM(180): as2 : Error 51: Phase Inconsistency (P1: 410C, P2: 4050) 'COPY_STRIP1'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+Num: 410C (int REL .l),  End
+ C:\META\SOURCE\SCROLL.ASM(190): as2 : Error 54: Can't match Addressing mode '	BNE	COPY_STRIP1'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(193): as2 : Error 51: Phase Inconsistency (P1: 4124, P2: 4067) 'NO_CHANGE1'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(196): as2 : Error 51: Phase Inconsistency (P1: 4125, P2: 4068) 'STATUS_PANNEL'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(214): as2 : Error 51: Phase Inconsistency (P1: 4149, P2: 408C) 'HEXW'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+  C:\META\SOURCE\MACROS.ASM(57): as2 : Error 51: Phase Inconsistency (P1: 4154, P2: 4097) 'TOPB'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ c:\meta\source\scroll.asm(222): as2 : (Macro Call) : ShortA
+ C:\META\SOURCE\SCROLL.ASM(233): as2 : Error 51: Phase Inconsistency (P1: 4162, P2: 40A5) 'BOTB'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(241): as2 : Error 51: Phase Inconsistency (P1: 416D, P2: 40B0) 'SING_DEC'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(250): as2 : Error 51: Phase Inconsistency (P1: 417C, P2: 40BF) 'DIVID'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(253): as2 : Error 51: Phase Inconsistency (P1: 4184, P2: 40C7) 'LOOP'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+Num: 418D (int REL .l),  End
+ C:\META\SOURCE\SCROLL.ASM(255): as2 : Error 54: Can't match Addressing mode '	BCC	SKIP'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+ C:\META\SOURCE\SCROLL.ASM(257): as2 : Error 51: Phase Inconsistency (P1: 418D, P2: 40CF) 'SKIP'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+Num: 4184 (int REL .l),  End
+ C:\META\SOURCE\SCROLL.ASM(259): as2 : Error 54: Can't match Addressing mode '	BNE	LOOP'
+c:\meta\source\game.asm(2238): as2 : (Include File) : 	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+  C:\META\SOURCE\MACROS.ASM(39): as2 : Error 51: Phase Inconsistency (P1: 4193, P2: 40D4) 'MAKE_MODE7'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ c:\meta\source\mode7.asm(2): as2 : (Macro Call) : ShortA_LongI
+Pass 2 :  82% ² Pass 2 :  82% Û  C:\META\SOURCE\MODE7.ASM(17): as2 : Error 51: Phase Inconsistency (P1: 41AF, P2: 40F0) 'save_all'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+Num: 41C9 (int REL .l),  End
+ C:\META\SOURCE\MODE7.ASM(23): as2 : Error 54: Can't match Addressing mode '	BNE	all_line'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ C:\META\SOURCE\MODE7.ASM(30): as2 : Error 51: Phase Inconsistency (P1: 41C9, P2: 4109) 'all_line'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+Num: 41AF (int REL .l),  End
+ C:\META\SOURCE\MODE7.ASM(33): as2 : Error 54: Can't match Addressing mode '	BNE	save_all'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ C:\META\SOURCE\MODE7.ASM(42): as2 : Error 51: Phase Inconsistency (P1: 41E2, P2: 4121) 'QUICK_C'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+Num: 41E2 (int REL .l),  End
+ C:\META\SOURCE\MODE7.ASM(48): as2 : Error 54: Can't match Addressing mode '	BNE	QUICK_C'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ C:\META\SOURCE\MODE7.ASM(54): as2 : Error 51: Phase Inconsistency (P1: 41F6, P2: 4134) 'do_all'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ C:\META\SOURCE\MODE7.ASM(56): as2 : Error 51: Phase Inconsistency (P1: 41FA, P2: 4138) 'whole_char'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ C:\META\SOURCE\MODE7.ASM(57): as2 : Error 51: Phase Inconsistency (P1: 41FC, P2: 413A) 'next_plane'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+Num: 420B (int REL .l),  End
+ C:\META\SOURCE\MODE7.ASM(61): as2 : Error 54: Can't match Addressing mode '	BEQ	not_bit1'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ C:\META\SOURCE\MODE7.ASM(64): as2 : Error 51: Phase Inconsistency (P1: 420B, P2: 4148) 'not_bit1'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+Num: 4218 (int REL .l),  End
+ C:\META\SOURCE\MODE7.ASM(66): as2 : Error 54: Can't match Addressing mode '	BEQ	not_bit2'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ C:\META\SOURCE\MODE7.ASM(70): as2 : Error 51: Phase Inconsistency (P1: 4218, P2: 4154) 'not_bit2'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+Num: 4225 (int REL .l),  End
+ C:\META\SOURCE\MODE7.ASM(72): as2 : Error 54: Can't match Addressing mode '	BEQ	not_bit3'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ C:\META\SOURCE\MODE7.ASM(76): as2 : Error 51: Phase Inconsistency (P1: 4225, P2: 4160) 'not_bit3'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+Num: 4232 (int REL .l),  End
+ C:\META\SOURCE\MODE7.ASM(78): as2 : Error 54: Can't match Addressing mode '	BEQ	not_bit4'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+Pass 2 :  83% ° Pass 2 :  83% ±  C:\META\SOURCE\MODE7.ASM(82): as2 : Error 51: Phase Inconsistency (P1: 4232, P2: 416C) 'not_bit4'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+Num: 41FC (int REL .l),  End
+ C:\META\SOURCE\MODE7.ASM(88): as2 : Error 54: Can't match Addressing mode '	BNE	next_plane	; all 8 bitdone'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+  C:\META\SOURCE\MACROS.ASM(33): as2 : Error 51: Phase Inconsistency (P1: 4255, P2: 418E) 'DO_ROTATION'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ c:\meta\source\mode7.asm(105): as2 : (Macro Call) : LongAI
+  C:\META\SOURCE\MACROS.ASM(57): as2 : Error 51: Phase Inconsistency (P1: 4280, P2: 41B9) 'MULTIPLY'
+c:\meta\source\game.asm(2239): as2 : (Include File) : 	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+ c:\meta\source\mode7.asm(133): as2 : (Macro Call) : ShortA
+ C:\META\SOURCE\SINETAB.ASM(1): as2 : Error 51: Phase Inconsistency (P1: 4299, P2: 41D2) 'SIN_TAB'
+c:\meta\source\game.asm(2240): as2 : (Include File) : 	#INCLUDE "SINETAB.ASM"	; SIN Tables for Rotation
+ C:\META\SOURCE\SINETAB.ASM(9): as2 : Error 51: Phase Inconsistency (P1: 4319, P2: 4252) 'COS_TAB'
+c:\meta\source\game.asm(2240): as2 : (Include File) : 	#INCLUDE "SINETAB.ASM"	; SIN Tables for Rotation
+Pass 2 :  84% ² Pass 2 :  84% Û Pass 2 :  85% ° Pass 2 :  85% ±  C:\META\SOURCE\UTILS.ASM(4): as2 : Error 51: Phase Inconsistency (P1: 4519, P2: 4452) 'INIT_SPRITES'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(6): as2 : Error 51: Phase Inconsistency (P1: 451C, P2: 4455) 'CLEAR_SPRITES'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 451C (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(28): as2 : Error 54: Can't match Addressing mode '	BNE	CLEAR_SPRITES'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(30): as2 : Error 51: Phase Inconsistency (P1: 4545, P2: 447D) 'CLEAR_OTHER'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 4545 (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(33): as2 : Error 54: Can't match Addressing mode '	BPL	CLEAR_OTHER'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(36): as2 : Error 51: Phase Inconsistency (P1: 454D, P2: 4484) 'MASK_TABLE'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(42): as2 : Error 51: Phase Inconsistency (P1: 4555, P2: 448C) 'SM_DELAY'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(44): as2 : Error 51: Phase Inconsistency (P1: 4558, P2: 448F) 'WAIT_V'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 4558 (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(45): as2 : Error 54: Can't match Addressing mode '	BEQ	WAIT_V'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 4558 (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(48): as2 : Error 54: Can't match Addressing mode '	BNE	WAIT_V'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(54): as2 : Error 51: Phase Inconsistency (P1: 4563, P2: 4498) 'FADE_IN'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(57): as2 : Error 51: Phase Inconsistency (P1: 4568, P2: 449D) 'FADELOOP'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(59): as2 : Error 51: Phase Inconsistency (P1: 456C, P2: 44A1) 'FADE_WAIT1'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 456C (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(61): as2 : Error 54: Can't match Addressing mode '	BNE	FADE_WAIT1'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 4568 (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(64): as2 : Error 54: Can't match Addressing mode '	BNE	FADELOOP'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(70): as2 : Error 51: Phase Inconsistency (P1: 4579, P2: 44AC) 'FADE_OUT'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(73): as2 : Error 51: Phase Inconsistency (P1: 457E, P2: 44B1) 'FADE_OUT_LOOP'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(75): as2 : Error 51: Phase Inconsistency (P1: 4582, P2: 44B5) 'FADE_WAIT2'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 4582 (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(77): as2 : Error 54: Can't match Addressing mode '	BNE	FADE_WAIT2'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Pass 2 :  86% ² Pass 2 :  86% Û Num: 457E (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(79): as2 : Error 54: Can't match Addressing mode '	BPL	FADE_OUT_LOOP'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(87): as2 : Error 51: Phase Inconsistency (P1: 4593, P2: 44C4) 'FIFTY'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(89): as2 : Error 51: Phase Inconsistency (P1: 4596, P2: 44C7) 'WAIT_S'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 4596 (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(90): as2 : Error 54: Can't match Addressing mode '	BEQ	WAIT_S'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(97): as2 : Error 51: Phase Inconsistency (P1: 459E, P2: 44CE) 'UNPACK_DATA'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(110): as2 : Error 51: Phase Inconsistency (P1: 45B4, P2: 44E4) 'UNPACK_ALL'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 45C9 (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(111): as2 : Error 54: Can't match Addressing mode '	BMI	SPECIAL	; -ive then special'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(114): as2 : Error 51: Phase Inconsistency (P1: 45BB, P2: 44EA) 'LITERAL'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 45BB (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(119): as2 : Error 54: Can't match Addressing mode '	BNE	LITERAL	; do all copy'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 45B4 (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(121): as2 : Error 54: Can't match Addressing mode '	BRA	UNPACK_ALL	; keep going'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(123): as2 : Error 51: Phase Inconsistency (P1: 45C9, P2: 44F6) 'SPECIAL'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 45EC (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(127): as2 : Error 54: Can't match Addressing mode '	BEQ	END_PACKED	; end of data list'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(135): as2 : Error 51: Phase Inconsistency (P1: 45DC, P2: 4508) 'REPEAT'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 45DC (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(140): as2 : Error 54: Can't match Addressing mode '	BNE	REPEAT'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Num: 45B4 (int REL .l),  End
+ C:\META\SOURCE\UTILS.ASM(143): as2 : Error 54: Can't match Addressing mode '	BRA	UNPACK_ALL	; keep going'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(145): as2 : Error 51: Phase Inconsistency (P1: 45EC, P2: 4516) 'END_PACKED'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+ C:\META\SOURCE\UTILS.ASM(151): as2 : Error 51: Phase Inconsistency (P1: 45F0, P2: 451A) 'DMA_TO_VRAM'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+Pass 2 :  87% ° Pass 2 :  87% ±  C:\META\SOURCE\UTILS.ASM(162): as2 : Error 51: Phase Inconsistency (P1: 4607, P2: 4531) 'CLEAR_VRAM'
+c:\meta\source\game.asm(2241): as2 : (Include File) : 	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+C:\META\SOURCE\GAME.ASM(2244): as2 : Error 51: Phase Inconsistency (P1: 4622, P2: 454C) 'SET_GAME'
+Pass 2 :  89% ² Pass 2 :  89% Û C:\META\SOURCE\GAME.ASM(2377): as2 : Error 51: Phase Inconsistency (P1: 4720, P2: 464A) 'RE_INIT_GAME'
+Pass 2 :  90% ° Pass 2 :  90% ± C:\META\SOURCE\GAME.ASM(2476): as2 : Error 51: Phase Inconsistency (P1: 47F8, P2: 4722) 'SET_CREDIT'
+ C:\META\SOURCE\MACROS.ASM(57): as2 : Error 51: Phase Inconsistency (P1: 486A, P2: 4794) 'ZOOM_TEST'
+c:\meta\source\game.asm(2528): as2 : (Macro Call) : ShortA
+Num: 4898 (int REL .l),  End
+C:\META\SOURCE\GAME.ASM(2530): as2 : Error 54: Can't match Addressing mode '	BNE	IN_USE'
+Num: 4896 (int REL .l),  End
+C:\META\SOURCE\GAME.ASM(2546): as2 : Error 54: Can't match Addressing mode '	BCC	ASD'
+C:\META\SOURCE\GAME.ASM(2548): as2 : Error 51: Phase Inconsistency (P1: 4896, P2: 47BE) 'ASD'
+ C:\META\SOURCE\MACROS.ASM(67): as2 : Error 51: Phase Inconsistency (P1: 4898, P2: 47C0) 'IN_USE'
+c:\meta\source\game.asm(2549): as2 : (Macro Call) : LongA
+Pass 2 :  92% ² Pass 2 :  92% Û C:\META\SOURCE\GAME.ASM(2554): as2 : Error 51: Phase Inconsistency (P1: 489B, P2: 47C3) 'TEST_ZOOM_Y'
+C:\META\SOURCE\GAME.ASM(2560): as2 : Error 51: Phase Inconsistency (P1: 48A5, P2: 47CD) 'TEST_ZOOM_SIZE'
+C:\META\SOURCE\GAME.ASM(2566): as2 : Error 51: Phase Inconsistency (P1: 48AF, P2: 47D7) 'TEST_ZOOM_TIME'
+ C:\META\SOURCE\MACROS.ASM(57): as2 : Error 51: Phase Inconsistency (P1: 48B9, P2: 47E1) 'WINDOW_UPDATE'
+c:\meta\source\game.asm(2578): as2 : (Macro Call) : ShortA
+Num: 48E4 (int REL .l),  End
+C:\META\SOURCE\GAME.ASM(2580): as2 : Error 54: Can't match Addressing mode '	BMI	OPEN_UP	; open window'
+C:\META\SOURCE\GAME.ASM(2580): as2 : Fatal 90: More than 100 error, aborting '100'

@@ -1,0 +1,43 @@
+DISTANCEX	LDA	ENEMY_XL,X		; get distance for this sprite
+	SEC
+	SBC	RIPLEY_XL
+	STA	MIKE1
+	LDA	ENEMY_XH,X
+	SBC	RIPLEY_XH
+	BCC	TAKE2		; sprite is the bigger
+	STA	MIKE1+1
+	LDA	#128		; alien to right of me
+	RTS
+
+	; Ripley Xposition the bigger, ie alien to left of me
+TAKE2	LDA	RIPLEY_XL
+	SEC
+	SBC	ENEMY_XL,X
+	STA	MIKE1
+	LDA	RIPLEY_XH
+	SBC	ENEMY_XH,X
+	STA	MIKE1+1
+	LDA	#0		; left side of ripley
+	RTS
+
+DISTANCEY	LDA	ENEMY_YL,X		; get distance for this sprite
+	SEC
+	SBC	RIPLEY_YL
+	STA	MIKE1
+	LDA	ENEMY_YH,X
+	SBC	RIPLEY_YH
+	BCC	TAKE3		; sprite is the bigger
+	STA	MIKE1+1
+	LDA	#128		; enemy below ripley
+	RTS
+
+	; Ripley position below enemy
+TAKE3	LDA	RIPLEY_YL
+	SEC
+	SBC	ENEMY_YL,X
+	STA	MIKE1
+	LDA	RIPLEY_YH
+	SBC	ENEMY_YH,X
+	STA	MIKE1+1
+	LDA	#0		; above ripley
+	RTS

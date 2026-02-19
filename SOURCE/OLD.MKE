@@ -1,0 +1,14 @@
+% Game
+
+*:		*
+
+game.obj:	game.asm+816const.asm+snes_io.asm
+		as game -o ;
+
+game.cod:	segments.obj+game.obj
+                lyn segments+game+rnc_2,game -e -l=mode20;
+
+*:		*
+*:              em4send game,2,27C401,1,808000,game -r=l -s=..\bin\cpu816
+                em4send game,2,27C401,1,808000,game -r=l
+

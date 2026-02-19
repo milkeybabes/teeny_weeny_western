@@ -1,0 +1,2819 @@
+65C816
+
+	#INCLUDE "816CONST.ASM"
+	#INCLUDE "MACROS.ASM"
+	#INCLUDE "SNES_IO.ASM"
+
+	LONGS
+
+;**-	Zero Paged Variables
+
+	SEGMENT 'banklowRAM'
+
+.VARIABLES
+
+.DOG	DS.B
+
+.DEBUG0	DS.W
+.DEBUG1	DS.W
+.DEBUG2	DS.W
+.DEBUG3	DS.W
+.DEBUG4	DS.W
+.DEBUG5	DS.W
+
+.ZAP_OUT	DS.W		; for DMA clear everything
+.NMI_JUMP	DS.B		; NMI JUMP VALUE (DONT SCREW!)
+.SYNC	DS.B
+.FADE	DS.B		; inidisp byte in nmi
+.JOY_PAD1	DS.W
+.JOY_PAD2	DS.W		; for my testing (or maybe game!)
+.LAST_JOY	DS.W		; prev control for joy movement
+.TEST_FADE	DS.W
+
+.PLAYER_ACTION	DS.W		; Control for Game actions
+.ACTION_SPEED	DS.W		; sub actions speed delay
+.SUB_ACTION	DS.W		; what actual player action
+.PLAYER_FRAME	DS.W		; frame add for walking
+.FRAME_INDEX	DS.W		; count for tables etc
+.ANIMATE_SPEED	DS.W		; animation speed for walking
+.WALK_SPEED	DS.W		; waits for new key press
+
+.HORSE_TURN	DS.W		; want horse to do a turn
+.HORSE_DIRECTION	DS.W		; horse direction faceing
+.TURN_SPEED	DS.W		; turn around speed
+
+.MAN_SPRITES	DS.W		; pointer to frame
+.MAN_BANK	DS.W		; will only need first byte
+
+.HORSE_SPRITES	DS.W
+.HORSE_BANK	DS.W		; will only use first byte
+
+.BOUNCE_AMOUNT	DS.W		; offset to horse position
+			; ie rider bounceing on horse
+
+.TURN_DIRECTION	DS.W		; turn around on spot
+.LAST_DIRECTION	DS.W		; last faceing position
+
+.MAN_HORSE	DS.W		; man or horse here for DEMO
+
+
+.CROSS_HAIR	DS.W		; cross hair pointer to circle
+.MAX_X	DS.W		; right screen compare
+.MAX_Y	DS.W		; bottom screen compare
+
+.MUSIC_MODE	DS.W		; test for Sound Mode
+.MUSIC_NUMBER	DS.W		; what tune is playing
+
+.DUCK_SPEED	DS.W		; password duck animation speed
+.DUCK_NUMBER	DS.W		; hit what one!
+.DUCK_BUFFER	DS.W		; hit spin animation
+.DUCK_DIR	DS.W		; spin direction
+.BULLET_FRAME	DS.W		; animation frame
+
+.BULLET_XDIFF	DS.W
+.BULLET_YDIFF	DS.W
+.BULLET_COUNT	DS.W
+.BULLET_XDIR	DS.W
+.BULLET_YDIR	DS.W
+.BULLET_BASE	DS.W
+.BULLET_DIST	DS.W
+.BULLET_THERE	DS.W		; being used!
+
+	; Scroll Stuff
+.XSCROLL1	DS.W
+.YSCROLL1	DS.W
+.WORLD_X	EQU	XSCROLL1	; map x position
+.WORLD_Y	EQU	YSCROLL1	; map y position
+.LAST_X	DS.W		; when paning about map
+.LASY_Y	DS.W		; save last map positions
+
+.OVERVIEW_X	DS.W		; scroll position for fancy
+.OVERVIEW_Y	DS.W		; screen may not need(1 screen!)
+
+.LAST_XPLOT	DS.W		; last plot strip x position
+.LAST_YPLOT	DS.W		; last plot strip y position
+.YPLOT_MEM	DS.W		; VRAM address for Y strip
+.XPLOT_MEM	DS.W		; VRAM address for X strip
+.XPLOT_ACT	DS.W		; need to plot
+.YPLOT_ACT	DS.W		; need to plot
+
+	; Zoom Window Stuff
+.ZOOM_DIRECTION	DS.B		; zoom up or down (0) nothing
+			; 128 OPEN. 64 DOWN
+			; 1 OPENED(now do delay)
+.ZOOM_TYPE	DS.B		; 0 from middle
+			; 1 top left    2 top right
+			; 3 bottom left 4 bottom right
+.WINDOW_STARTX	DS.B		; start window x position
+.WINDOW_STARTY	DS.B		; start window y position
+.ZOOM_SIZE	DS.B		; distance to zoom
+.ZOOM_TEMP	DS.B		; curent size
+.ZOOM_DELAY	DS.W		; when finished delay for close
+.ZOOM_NUMBER	DS.W		; test only at mo.
+
+	; Temp vars
+.MIKE1	DS.W		; Low/High
+.MIKE1_BANK	DS.W		; and maybe bank
+.MIKE2	DS.W
+.TEMP1	DS.W
+.TEMP2	DS.W
+.TEMP3	DS.W
+.TEMP4	DS.W
+.ATEMP	DS.W
+.XTEMP	DS.W
+.YTEMP	DS.W
+
+.COLLIDE_LEFT	DS.W
+.COLLIDE_RIGHT	DS.W
+.COLLIDE_TOP	DS.W
+.COLLIDE_BOT	DS.W
+
+	; Vars for Rotation used in NMI handler
+.MATRIX_A	DS.W
+.MATRIX_B	DS.W
+.MATRIX_C	DS.W
+.MATRIX_D	DS.W
+.X_SCALE	DS.W
+.ROTATION	DS.W
+.ROT_TEMP	DS.W		; temp save (never use)
+
+	; For Debug Plot
+YPOS	EQU	27
+STATUS_LINE	EQU	$0800+{YPOS MULT 32}	; to BG3 4 colour overlay
+
+
+
+;**-	Common RAM Data Definitions
+
+	SEGMENT 'bankcommon'
+.COMMON_BANK
+.HDMA_DATA	DS.W	32	; make area for window HDMA
+
+
+.LINE_BUFFER	DS.W	32	; For debug
+.SCROLL_YBUFFER	DS.W	32	; y lines worth for scroll
+.SCROLL_XBUFFER	DS.W	32	; x lines worth for scroll
+.OBJECT_DATA	DS.W	128 mult 2	; Object data
+.OBJECT_SIZES	DS.W	128/8	; as words. 2bits / sprite
+.SPRITE_ATTRIBS	EQU	OBJECT_DATA+2	; attributes + NAME
+
+.SPRITE_WORLDX	DS.W	128 Mult 2
+.SPRITE_WORLDY	EQU	SPRITE_WORLDX+2
+
+.SPRITE_OFFSET	DS.W	128 MULT 2	; index created for sprites
+.SPRITE_SET	EQU	SPRITE_OFFSET+2
+.SPRITE_UNSET	EQU	SPRITE_OFFSET+3
+
+.SPRITE_FRAME	DS.W	128 Mult 2	; Animation Frame
+.SPRITE_TYPE	EQU	SPRITE_FRAME+2	; Actual Type of Sprite
+
+	; For Options Text Plot And For Pull Down Game Options
+
+.TEXT_SCREEN	DS.W	32 MULT 32	; whole VRAM's BG screens worth
+
+
+;**-	RAM BANK 7E
+	SEGMENT	'bank7ERAM'	; user ram area
+
+.USER_RAM2
+.MADEUP_MAP	DS.B	8 mult 1024	; 8k's worth for now
+
+;**-	RAM BANK 7F
+	SEGMENT 'bank7FRAM'	; where map is to sit
+.USER_RAM1
+.UNPACK_BUFFER	DS.B	24 mult 1024	; size upto largest needed
+.MODE7_MAKEUP	DS.B	32 mult 1024	;16k words of data total (wow!)
+
+;**-	ROM Bank0
+; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+; Vector entry points - must be in bank 0
+; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	SEGMENT	'bank0ROM'
+.FIRST_BANK
+
+	#INCLUDE "backchan.asm"
+	#INCLUDE "bchcomms.asm"
+
+;**-	NMI Handler
+NMIentry	GROUP	nmi
+	PHP
+	LongAI
+	PHB
+	PHA
+	PHX
+	PHY
+	ShortAI
+	LDA	#0	; bank 0
+	PHA
+	PLB
+	LDA	|RDNMI	; Clear NMI
+	INC	<SYNC
+	LDA	<FADE
+	STA	|INIDISP
+	LDX	<NMI_JUMP	; extra for current setting
+	JSR	(NMI_JUMP_TABLE,X)
+	LongAI
+joywaitloop	LDA	|HVBJOY
+	AND	#%00000001
+	BNE	joywaitloop
+	LDA	|JOY1L
+	STA	<JOY_PAD1
+	LDA	|JOY2L
+	STA	<JOY_PAD2
+	PLY
+	PLX
+	PLA
+	PLB
+	PLP
+	GROUP	main
+	RTI
+
+	; Extra Control Stuff for Diff NMI's
+NMI_JUMP_TABLE	WORD	NOT_A_SAUSAGE	; 0 Doing Nothing (humm)
+	WORD	LOGO_PICKY	; 2 MODE7 rotation stuff
+	WORD	OVER_SCREEN	; 4 not a lot when in fancy screen
+	WORD	GAME_STUFF	; 6 all MAIN game level stuff
+	WORD	TEXT_SCREENS	; 8 options/password music
+	WORD	TITLE_ANIM	;10 title page animations
+
+NOTHING_NMI	EQU	0
+LOGO_NMI	EQU	2
+OVER_NMI	EQU	4
+GAME_NMI	EQU	6
+TEXT_NMI	EQU	8	; debug plot
+ANIM_NMI	EQU	10
+
+TITLE_ANIM	LongA_ShortI
+	LDA	<XTEMP	; when to plot
+	STA	|VMADDL
+	LDA	<YTEMP	; size to poke
+	STA	|DMA_COUNT+DMA7
+	LDA	<TEMP1
+	STA	|DMA_A1ADDR+DMA7	; start address for read
+	LDX	<TEMP2	; bank 1 for character set
+	STX	|DMA_A1ADDRB+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN	; set channel 7 going?
+
+	LDA	#$6c00+$af
+	STA	|VMADDL	; BG1
+	LDA	#$638-$15e	; transfer whole screen (almost)
+	STA	|DMA_COUNT+DMA7
+	LDA	#OFFSET UNPACK_BUFFER+$15E 	;TEXT_SCREEN+$15e
+	STA	|DMA_A1ADDR+DMA7	; start address for read
+	LDX	#SEG UNPACK_BUFFER ;TEXT_SCREEN	; bank 1 for character set
+	STX	|DMA_A1ADDRB+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN	; set channel 7 going?
+	RTS
+
+
+	; Title Page NMI stuff in MODE7 must poke all rotation values
+LOGO_PICKY	LongA_ShortI
+	STZ	|OAMADDL	; object OAM data address
+	LDA	#OBJECT_DATA	; Object_data
+	STA	|DMA_A1ADDR+DMA5	; data start low/hi
+	LDX	#SEG OBJECT_DATA
+	STX	|DMA_A1ADDRB+DMA5
+	LDA     #544	; bytes to transfer
+	STA     |DMA_COUNT+DMA5
+	LDX	#BIT5	; DMA 5
+	STX	|MDMAEN	; Trigger Channel5 DMA
+
+	JSR	|DO_ROTATION
+	ShortA
+	LDA	<MATRIX_A
+	STA	|M7A
+	LDA	<MATRIX_A+1
+	STA	|M7A
+	LDA	<MATRIX_B
+	STA	|M7B
+	LDA	<MATRIX_B+1
+	STA	|M7B
+	LDA	<MATRIX_C
+	STA	|M7C
+	LDA	<MATRIX_C+1
+	STA	|M7C
+	LDA	<MATRIX_D
+	STA	|M7D
+	LDA	<MATRIX_D+1
+	STA	|M7D
+	LDA	#128	; rotation point
+	STA	|M7X
+	STZ	|M7X
+	LDA	#100	; in middle someware
+	STA	|M7Y
+	STZ	|M7Y
+	RTS
+
+	; Entry here as not much to do only scroll cords in BG1
+OVER_SCREEN	LDA	<OVERVIEW_X	; xscroll low
+	STA	|BG1HOFS
+	LDA	<OVERVIEW_X+1	; xscroll high
+	STA	|BG1HOFS
+	LDA	<OVERVIEW_Y	; yscroll low
+	STA	|BG1VOFS
+	LDA	<OVERVIEW_Y+1	; yscroll high
+	STA	|BG1VOFS
+NOT_A_SAUSAGE	RTS
+
+GAME_STUFF	LongA_ShortI
+
+	STZ	|OAMADDL	; object OAM data address
+	LDA	#OBJECT_DATA	; Object_data
+	STA	|DMA_A1ADDR+DMA5	; data start low/hi
+	LDX	#SEG OBJECT_DATA
+	STX	|DMA_A1ADDRB+DMA5
+	LDA     #544	; bytes to transfer
+	STA     |DMA_COUNT+DMA5
+	LDX	#BIT5	; DMA 5
+	STX	|MDMAEN	; Trigger Channel5 DMA
+
+	LDX	#$80
+	STX	|OAMADDL+1
+	LDX	<DOG
+	STX	|OAMADDL
+
+	LDA	#STATUS_LINE	; where BG1 overlay screen is
+	STA	|VMADDL	; vram start write
+	LDA	#32 MULT 2	; transfer line only
+	STA	|DMA_COUNT+DMA7
+	LDA	#OFFSET LINE_BUFFER
+	STA	|DMA_A1ADDR+DMA7	; start address for read
+	LDX	#SEG LINE_BUFFER	; bank 1 for character set
+	STX	|DMA_A1ADDRB+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN	; set channel 7 going?
+
+	LDA	<YPLOT_ACT	; extra for current setting
+	BEQ	NO_YPLOTTING
+	STZ	<YPLOT_ACT	; mark as now plotted
+	; plot ystrip down screen	; (well about to be)
+	LDX	#$81	; downwards
+	STX	|VMAINC
+	LDA	<YPLOT_MEM	; where BG2 screen is
+	STA	|VMADDL	; vram start write
+	LDA	#32 MULT 2	; transfer line only
+	STA	|DMA_COUNT+DMA7
+	LDA	#OFFSET SCROLL_YBUFFER
+	STA	|DMA_A1ADDR+DMA7	; start address for read
+	LDX	#SEG SCROLL_YBUFFER	; bank 1 for character set
+	STX	|DMA_A1ADDRB+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN	; set channel 7 going?
+	LDX	#$80
+	STX	|VMAINC
+NO_YPLOTTING	LDA	<XPLOT_ACT	; extra for current setting
+	BEQ	NO_XPLOTTING
+	; plot xstrip across screen
+	STZ	<XPLOT_ACT
+	LDA	<XPLOT_MEM	; where BG2 screen is
+	STA	|VMADDL	; vram start write
+	LDA	#32 MULT 2	; transfer line only
+	STA	|DMA_COUNT+DMA7
+	LDA	#OFFSET SCROLL_XBUFFER
+	STA	|DMA_A1ADDR+DMA7	; start address for read
+	LDX	#SEG SCROLL_XBUFFER	; bank 1 for character set
+	STX	|DMA_A1ADDRB+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN	; set channel 7 going?
+	; save useing another ShortA
+	; Scroll in main game on BG2
+NO_XPLOTTING	
+	; now transfer sprite frames, for horse, four vram strips
+	LDA	#$6000	; start of Sprites in DMA
+	STA	|VMADDL
+	LDA	#2048	; two strips worth
+	STA	|DMA_COUNT+DMA7
+	LDA	<HORSE_SPRITES	; horse place
+	STA	|DMA_A1ADDR+DMA7
+	LDX	<HORSE_BANK	; bank for sprites
+	STX	|DMA_A1ADDRB+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN
+
+	LDA	<MAN_SPRITES	; where to DMA from
+	STA	|DMA_A1ADDR+DMA7
+	LDX	#SEG USER_RAM1	; segment for sprites
+	STX	|DMA_A1ADDRB+DMA7
+
+	LDA	#$6400	; start of Sprites in DMA
+	STA	|VMADDL
+	LDA	#4 MULT 32	; 4x4 charss worth
+	STA	|DMA_COUNT+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN
+
+	LDA	#$6500	; start of Sprites in DMA
+	STA	|VMADDL
+	LDA	#4 MULT 32	; 4x4 charss worth
+	STA	|DMA_COUNT+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN
+
+	LDA	#$6600	; start of Sprites in DMA
+	STA	|VMADDL
+	LDA	#4 MULT 32	; 4x4 charss worth
+	STA	|DMA_COUNT+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN
+
+	LDA	#$6700	; start of Sprites in DMA
+	STA	|VMADDL
+	LDA	#4 MULT 32	; 4x4 charss worth
+	STA	|DMA_COUNT+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN
+
+OPT_X	EQU	4	; chars in
+OPT_Y	EQU	1	; start line down
+
+	LDA	#$800+{OPT_Y MULT 32}	; really * 64 but VRAM words
+	STA	|VMADDL	; BG3 @ debug buffer
+	LDA	#64 MULT 2	; transfer two lines worth
+	STA	|DMA_COUNT+DMA7
+	LDA	#OFFSET TEXT_SCREEN+{OPT_Y MULT 64}
+	STA	|DMA_A1ADDR+DMA7	; start address for read
+	LDX	#SEG TEXT_SCREEN	; bank 1 for character set
+	STX	|DMA_A1ADDRB+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN	; set channel 7 going?
+
+	LDX	<WORLD_X	; xscroll low
+	STX	|BG2HOFS
+	LDX	<WORLD_X+1	; xscroll high
+	STX	|BG2HOFS
+	LDX	<WORLD_Y	; yscroll low
+	STX	|BG2VOFS
+	LDX	<WORLD_Y+1	; yscroll high
+	STX	|BG2VOFS
+	RTS
+
+TEXT_SCREENS	LongA_ShortI
+
+	STZ	|VMADDL	; BG1 @ 0
+	LDA	#64 MULT 28	; transfer whole screen (almost)
+	STA	|DMA_COUNT+DMA7
+	LDA	#OFFSET TEXT_SCREEN
+	STA	|DMA_A1ADDR+DMA7	; start address for read
+	LDX	#SEG TEXT_SCREEN	; bank 1 for character set
+	STX	|DMA_A1ADDRB+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN	; set channel 7 going?
+
+	;LDA	#STATUS_LINE	; where BG1 overlay screen is
+	;STA	|VMADDL	; vram start write
+	;LDA	#32 MULT 2	; transfer line only
+	;STA	|DMA_COUNT+DMA7
+	;LDA	#OFFSET LINE_BUFFER
+	;STA	|DMA_A1ADDR+DMA7	; start address for read
+	;LDX	#SEG LINE_BUFFER	; bank 1 for character set
+	;STX	|DMA_A1ADDRB+DMA7
+	;LDX	#BIT7
+	;STX	|MDMAEN	; set channel 7 going?
+
+	STZ	|OAMADDL	; object OAM data address
+	LDA	#OBJECT_DATA	; Object_data
+	STA	|DMA_A1ADDR+DMA5	; data start low/hi
+	LDX	#SEG OBJECT_DATA
+	STX	|DMA_A1ADDRB+DMA5
+	LDA     #544	; bytes to transfer
+	STA     |DMA_COUNT+DMA5
+	LDX	#BIT5	; DMA 5
+	STX	|MDMAEN	; Trigger Channel5 DMA
+	RTS
+
+;**-	Init and Setup of SNES (INCLUDED)
+
+	#INCLUDE "RESET.ASM"
+
+;**+	Main Loop Control
+FOREVER	JSR	|SET_CREDIT	; copyright Published etc
+	JSR	|FADE_IN
+	LDX	#500
+	JSR	|SM_DELAY
+	JSR	|FADE_OUT
+RESTART_TITLE	;BRA	GO_GAME
+	;BRA	GO_GO
+	JSR	|SET_LOGO	; makeup mode7 screen
+	JSR	|SPIN_EFFECT
+
+	JSR	|SETUP_TITLE
+	JSR	|FADE_IN
+	LDX	#200
+	JSR	|SM_DELAY
+	JSR	|TITLE_ANIMATION
+	LDX	#100
+	JSR	|SM_DELAY
+	JSR	|FADE_OUT
+
+	;BRA	RESTART_TITLE
+
+GO_GO	JSR	|SETUP_TEXT	; all characters & sprites
+GO_BACK	JSR	|OPTIONS_TEXT	; first selection screen
+	JSR	|FADE_IN
+SELECT1_LOOP	JSR	|SELECT_MOVE	; move & wait for B button
+	LDA	<JOY_PAD1	; nothing pressed
+	BEQ	REINIT_CO
+	BIT	#Joy_B+Joy_Start	; select 
+	BNE	MADE_SEL
+	LDX	#10
+	BRA	LARGE_DEL
+REINIT_CO	LDX	#1
+LARGE_DEL	JSR	|SM_DELAY
+	DEC	<TEMP3
+	BNE	SELECT1_LOOP
+	JSR	|FADE_OUT
+	BRA	RESTART_TITLE
+
+MADE_SEL	LDA	<YTEMP
+	CMP	#2	; START no selections
+	BEQ	START_NOW
+	CMP	#1
+	BEQ	MUSIC_SELECT
+	JSR	|FADE_OUT
+	JSR	|SETUP_PASSWORD	; else must be password
+	JSR	|FADE_IN
+	JSR	|GET_PASSWORD	; get a password!
+	BRA	START_NOW
+
+MUSIC_SELECT	JSR	|FADE_OUT
+	JSR	|MUSIC_OPTIONS	; music selection options
+	JSR	|MUSIC_VALUES
+	JSR	|FADE_IN
+	JSR	|MUSIC_LOOP	; music stuff
+	JSR	|FADE_OUT
+	BRA	GO_BACK
+
+START_NOW	JSR	|FADE_OUT
+GO_GAME	JSR	|SET_GAME	; Init All Params
+	JSR	|FADE_IN
+	JSR	|GAME_START	; Game Loop
+	JSR	|FADE_OUT	; All black
+	JSR	|SETUP_TEXT	; all characters & sprites
+	JSR	|PASSWORD_CODE	; first selection screen
+	JSR	|FADE_IN
+	LDA	#30 MULT 50	; wait 30 seconds
+	STA	<TEMP3
+WAIT_WRITTEN	JSR	|FIFTY
+	LDA	#Joy_Start	; Or Start for Carry On
+	BIT	<JOY_PAD1
+	BNE	WRITTEN_DOWN
+	DEC	<TEMP3
+	BNE	WAIT_WRITTEN
+WRITTEN_DOWN	JSR	|FADE_OUT	
+	JMP	|FOREVER	; Go back to title
+	
+	#INCLUDE "TITLE.ASM"
+	#INCLUDE "ANIM.ASM"
+	#INCLUDE "PASSWORD.ASM"
+	#INCLUDE "COL.ASM"
+
+;**+	Main Game Loop
+BOX_XSIZE	EQU	64+32
+BOX_YSIZE	EQU	64+32
+
+XMAP_START	EQU	128-{BOX_XSIZE/2}
+XMAP_STOP	EQU	128+{BOX_XSIZE/2}
+YMAP_START	EQU	112-{BOX_YSIZE/2}
+YMAP_STOP	EQU	112+{BOX_YSIZE/2}
+
+MAPX	EQU	80	; characters x
+MAPY	EQU	60	; characters y
+
+BRIGHT	MACRO	VALUE
+	ShortA
+	LDA	#VALUE
+	STA	|INIDISP
+	LongA
+	MEND
+
+GAME_START	LongAI
+
+	STZ	<PLAYER_ACTION	; Main Control Move SET
+	STZ	<SUB_ACTION	; jump, run, walk etc (WALK!)
+	STZ	<WALK_SPEED	; get new movement factor
+	LDA	#1
+	STA	<ACTION_SPEED
+	STA	<ANIMATE_SPEED
+	STA	<TURN_SPEED
+	STZ	<BULLET_THERE	; no bullet fired
+	STZ	<HORSE_TURN	; not turned
+
+GAME_LOOP	LDA	<JOY_PAD1
+	BIT	#Joy_Start	; OVERVIEW MAP!
+	BEQ	no_look
+	JSR	|SHOW_OVERVIEW
+no_look	LDX	<PLAYER_ACTION
+	JSR	(PLAYER_MOVES,X)	; do action now
+	LDA	<JOY_PAD1
+	BIT	#Joy_Select
+	BEQ	NOT_WIND
+
+	;JSR	|ZOOM_TEST	; no window stuff YET!
+	LDA	<MAN_HORSE
+	EOR	#-1
+	STA	<MAN_HORSE
+
+NOT_WIND	LDA	<JOY_PAD1
+	BIT	#Joy_X	; Game Options
+	BEQ	NOMNU
+	JSR	|OPTIONS_INIT
+
+AGAIN	JSR	|GAME_OPTIONS	; small options select
+	LDA	<JOY_PAD1
+	BIT	#Joy_B	; fire in all cases
+	BEQ	JUST_KUP
+	LDA	<YTEMP	; position
+	BEQ	CLEAR_EXIT	; return
+	RTS		; else must be quit game
+
+JUST_KUP	JSR	|FIFTY
+	JMP	|AGAIN	; small selection loop
+
+CLEAR_EXIT	JSR	|CLEAR_OPTIONS	; wipe area out
+
+NOMNU	;JSR	|WINDOW_UPDATE
+	;LongAI		; Have to set back unreliable
+
+	; Dirty Quick Priority of sprite & Horse
+
+	LDA	<MAN_HORSE
+	BNE	HIGHP
+	LDA	<SUB_ACTION
+	BNE	HIGHP
+
+	LDA	|SPRITE_WORLDY+0
+	CMP	|SPRITE_WORLDY+16
+	BCC	BEHIT
+	SBC	|SPRITE_WORLDY+16
+	CMP	#$09
+	BCS	HIGHP
+
+BEHIT	LDA	#4
+	STA	<DOG
+	BRA	CRAS
+
+HIGHP	STZ	<DOG
+
+CRAS	JSR	|HDISTANCEX
+	LDA	<MIKE1
+	
+	LDA	|SPRITE_WORLDY+0
+	STA	<DEBUG0
+	JSR	|HDISTANCEY
+	LDA	<MIKE1
+	LDA	|SPRITE_WORLDY+16
+	STA	<DEBUG1
+
+	LDA	<TURN_DIRECTION
+	;LDA	<FRAME_INDEX
+	LDA	|SPRITE_WORLDX+0
+	STA	<DEBUG2
+	LDA	<HORSE_DIRECTION
+	LDA	|SPRITE_WORLDX+16
+	STA	<DEBUG3
+	LDA	<MAN_HORSE
+	STA	<DEBUG4
+	;LDA	<SUB_ACTION
+	LDA	<WALK_SPEED
+	STA	<DEBUG5
+
+	LDA	<JOY_PAD2	; get new direction
+	BEQ	SIMP
+	ShortI
+	XBA
+	AND	#15
+	ASL	A
+	TAY
+	LongI
+	LDA	|DIRECTION AND $FFFF,Y ; get clock position for joy
+	BMI	SIMP	; ERROR ?
+	STA	<HORSE_DIRECTION	; wanted new one
+	ASL	A
+	TAY
+	LDA	|HORSE_STAND AND $FFFF,Y
+	STA	<HORSE_SPRITES
+	JSR	|TEST1	; make horse face right way
+
+SIMP
+	JSR	|BULLET_UPDATE
+	JSR	|SCROLL_UPDATE
+
+	JSR	|STATUS_PANNEL
+
+	JSR	|FIFTY
+	JMP	|GAME_LOOP
+
+PLAYER_MOVES	WORD	GAME_MOVEMENT
+
+
+;**+	Player Movement For Normal Game mode
+	AssertM16X16
+
+	Assume	databank COMMON_BANK AND $FF0000
+
+
+PLAY_SPR	EQU	{0 MULT 4}
+BACK_SPR	EQU	{1 MULT 4}	; when player is on horses back
+			; have to use another sprite
+			; as position moves
+CROS_SPR	EQU	{2 MULT 4}
+BULL_SPR	EQU	{3 MULT 4}	;	bullet is in world
+
+HORSE_SPR	EQU	{4 MULT 4}	; group on its own
+
+
+PAN_STOPX	EQU	256-32-8	; pan screen stop x position
+PAN_STOPY	EQU	224-32	; pan screem stop y position
+
+	; All movement within Normal Game mode
+GAME_MOVEMENT	LDA	<CROSS_HAIR	; in cross movenent
+	BEQ	NOCROSS_MOVE	; let cross hair change turn
+	JMP	|CROSS_MOVE	; do cross hair movement
+NOCROSS_MOVE	LDA	<JOY_PAD1
+	BIT	#Joy_R
+	BEQ	NOTSET_CROSS	; set cross hair going
+	JMP	|SET_CROSS	; set now to cross hair moves
+NOTSET_CROSS	BIT	#Joy_L
+	BEQ	MAIN_MOVES
+	JSR	|PAN_SCREEN	; do panning of map
+	JSR	|SCROLL_THEN
+	STZ	<PLAYER_FRAME
+	JMP	|MAP_SPRITES
+
+MAIN_MOVES	DEC	<ACTION_SPEED
+	BNE	NO_SCROLL
+	LDX	<SUB_ACTION	; what player is doing
+	LDA	|DELAYS AND $FFFF,X
+	STA	<ACTION_SPEED
+	JSR	(ACTIONS,X)	; do then
+	BCC	NOT_TO_SCROLL
+	JSR	|SCROLL_THEN	; update scroll
+NOT_TO_SCROLL	JSR	|FRAME_TABLE	; set animation
+	JMP	|MAP_SPRITES	; map player and shadow
+
+SCROLL_THEN	TXA
+	CLC
+	ADC	<WORLD_X
+	BMI	no_savex	; dont store if < 0
+	CMP	#1+{{MAPX-32} MULT 8}
+	BCS	no_savex
+	STA	<WORLD_X
+no_savex	TYA
+	CLC
+	ADC	<WORLD_Y
+	BMI	NO_SCROLL	; < 0
+	CMP	#1+{{MAPY-28} MULT 8}
+	BCS	NO_SCROLL
+	STA	<WORLD_Y
+NO_SCROLL	RTS
+
+WALK_ACT	EQU	0
+JUMP_ACT	EQU	2	; normal jump about
+ON_HORSE_ACT	EQU	4	; get on horse from behind it
+OFF_HORSE_ACT	EQU	6	; get of horses back
+FIRE_ACT	EQU	8	; gun fire
+
+ACTIONS	WORD	DO_WALKING	; player & horse walk
+	WORD	DO_JUMP	; jump about
+	WORD	DO_ONHORSE	; get on horse
+	WORD	DO_OFHORSE	; get off horse
+	WORD	DO_FIREGUN
+
+DELAYS	WORD	1
+	WORD	3	; big delay for test
+	WORD	6
+	WORD	6
+	WORD	6	; fire
+
+;**-	Setup Player Sprite Frame and Horses for NMI
+FRAME_TABLE	LDA	<TURN_DIRECTION
+	ASL	A
+	TAY
+	LDA	<MAN_HORSE
+	BNE	ON_HORSEY
+	LDA	<PLAYER_FRAME
+	ASL	A
+	XBA
+	CLC
+	ADC	|FRAME_START AND $FFFF,Y
+	STA	<MAN_SPRITES
+	LDA	|FLIP_TABLE AND $FFFF,Y	; see faceing dir
+	BEQ	ASNORM1
+	LDA	#%0111000000000000+64	; next avail for player
+	STA	|SPRITE_ATTRIBS+PLAY_SPR
+	STA	|SPRITE_ATTRIBS+BACK_SPR	; on horses back
+	RTS
+
+ASNORM1	LDA	#%0011000000000000+64	; next avail for player
+	STA	|SPRITE_ATTRIBS+PLAY_SPR
+	STA	|SPRITE_ATTRIBS+BACK_SPR	; on horses back
+	RTS
+
+	; Walking On the Horse
+ON_HORSEY	LDA	<PLAYER_FRAME
+	BEQ	HORSE_STATE	; horse standing
+
+	DEC	A	; -1 for horse frames!!
+
+	ASL	A	; *512
+	STA	<MIKE1
+	ASL	A	; *1024
+	ASL	A	; *2048
+	XBA		; now swap lo-hi
+	CLC
+	ADC	#$8000	; will for slow & fast moves
+	STA	<HORSE_SPRITES
+	LDA	|SMALLER_OFF AND $FFFF,Y
+	CLC
+	ADC	<MIKE1	; frame * 2 word
+	TAX
+	LDA	|RIDER_POSITION AND $FFFF,X
+	STA	<BOUNCE_AMOUNT
+	LDA	|HORSE_SEG AND $FFFF,Y	; wrong value =-1 ignore
+	BRA	SET_HOR_DIR
+
+	; When on horse doing nothing all standing still frames
+HORSE_STATE	LDA	|HORSE_STAND AND $FFFF,Y
+	STA	<HORSE_SPRITES
+	LDA	|SOFFSET_TABLES AND $FFFF,Y ; init add for frame 0
+	STA	<BOUNCE_AMOUNT
+	LDA	#SEG HORSE0	; stand frames
+
+SET_HOR_DIR	STA	<HORSE_BANK
+	LDA	|MAN_SIT AND $FFFF,Y
+	STA	<MAN_SPRITES	; on horses back
+
+TEST1	LDA	|FLIP_TABLE AND $FFFF,Y	; see faceing dir
+	BEQ	ASNORM
+SET_HORSE_FRAME	LDA	#%0111000000000000	; flip,obj col + name
+	STA	|SPRITE_ATTRIBS+HORSE_SPR+4	; test for sprite 0
+	CLC
+	ADC	#4
+	STA	|SPRITE_ATTRIBS+HORSE_SPR+0
+	ADC	#4
+	STA	|SPRITE_ATTRIBS+HORSE_SPR+12
+	ADC	#4
+	STA	|SPRITE_ATTRIBS+HORSE_SPR+8
+	LDA	#%0111000000000000+64	; next avail for player
+	STA	|SPRITE_ATTRIBS+PLAY_SPR
+	STA	|SPRITE_ATTRIBS+BACK_SPR	; on horses back
+	RTS
+
+ASNORM	LDA	#%0011000000000000	; flip,obj col + name
+	STA	|SPRITE_ATTRIBS+HORSE_SPR	; test for sprite 0
+	CLC
+	ADC	#4
+	STA	|SPRITE_ATTRIBS+HORSE_SPR+4
+	ADC	#4
+	STA	|SPRITE_ATTRIBS+HORSE_SPR+8
+	ADC	#4
+	STA	|SPRITE_ATTRIBS+HORSE_SPR+12
+	LDA	#%0011000000000000+64	; next avail for player
+	STA	|SPRITE_ATTRIBS+PLAY_SPR
+	STA	|SPRITE_ATTRIBS+BACK_SPR	; on horses back
+	RTS
+
+	; Horse Frame standing
+HORSE_STAND	WORD	$8000+0	; 0
+	WORD	$8000+$800	; 1
+	WORD	$8000+$1000	; 2
+	WORD	$8000+$1800	; 3
+	WORD	$8000+$2000	; 4
+	WORD	$8000+$1800	; 5
+	WORD	$8000+$1000	; 6
+	WORD	$8000+$800	; 7
+
+	; Sitting on horse frame
+MAN_SIT	WORD	$0000+$e00	; 0
+	WORD	$3200+$e00	; 1
+	WORD	$6400+$e00	; 2
+	WORD	$9600+$e00	; 3
+	WORD	$c800+$e00	; 4
+	WORD	$9600+$e00	; 5
+	WORD	$6400+$e00	; 6
+	WORD	$3200+$e00	; 7
+
+	; Horse Frame Segments for Each Dir
+HORSE_SEG	WORD	SEG HORSE1	; up (8)
+	WORD	SEG HORSE2	; up & right (9)
+	WORD	SEG HORSE3	; left (2)
+	WORD	SEG HORSE4	; down & right (5)
+	WORD	SEG HORSE5	; down (4)
+	WORD	SEG HORSE4	; down & left (6)
+	WORD	SEG HORSE3	; right (1)
+	WORD	SEG HORSE2	; up & left (10)
+
+	; Memory For Frame Starts for Each Direction
+FRAME_START	WORD	$0000	; 0
+	WORD	$3200	; 1
+	WORD	$6400	; 2
+	WORD	$9600	; 3
+	WORD	$C800	; 4
+	WORD	$9600	; 5
+	WORD	$6400	; 6
+	WORD	$3200	; 7
+
+	; Match the Bearing Direction Required
+DIRECTION	WORD	-1	; nothing there
+	WORD	2	; right (1)
+	WORD	6	; left (2)
+	WORD	-1	; impossible
+	WORD	4	; down (4)
+	WORD	3	; down & right (5)
+	WORD	5	; down & left (6)
+	WORD	-1	; impossible
+	WORD	0	; up (8)
+	WORD	1	; up & right (9)
+	WORD	7	; up & left (10)
+	WORD	-1
+	WORD	-1
+	WORD	-1
+	WORD	-1
+	WORD	-1
+
+	; Inverse Direction (ie direction index to joy equiv.)
+INV_DIRECTION	WORD	8 MULT 256	; direction @ 0
+	WORD	9 MULT 256	; 1
+	WORD	1 MULT 256	; 2
+	WORD	5 MULT 256	; 3
+	WORD	4 MULT 256	; 4
+	WORD	6 MULT 256	; 5
+	WORD	2 MULT 256	; 6
+	WORD	10 MULT 256	; 7
+
+FLIP_TABLE	WORD	0	; up (8)
+	WORD	0	; up & right (9)
+	WORD	0	; right (1)
+	WORD	0	; down & right (5)
+	WORD	0	; down (4)
+	WORD	%0100000000000000	; down & left (6)
+	WORD	%0100000000000000	; left (2)
+	WORD	%0100000000000000	; up & left (10)
+
+
+SOFFSET_TABLES	WORD	8,6,4,8,7 ,8,4,6
+
+SMALLER_OFF	WORD	0,12,24,36,48, 36,24,12
+
+RIDER_POSITION	WORD	8,8,8,8,7,7	; 0
+	WORD	7,8,6,5,5,6	; 1
+	WORD	3,2,2,3,4,5	; 2
+	WORD	6,6,7,8,7,7	; 3
+	WORD	6,6,7,8,7,7	; 4
+
+	AssertM16X16
+
+	ASSUME	databank COMMON_BANK AND $FF0000
+
+
+;**+	Player Normal movement of walking around
+
+UPDATE_TURN	LDA	<LAST_DIRECTION
+	CMP	<TURN_DIRECTION	; same a current turn
+	BEQ	AT_POSITION
+	SEC
+	SBC	<TURN_DIRECTION	; relative to last
+	BPL	GOT_CORRECT
+	LDA	<TURN_DIRECTION
+	SEC
+	SBC	<LAST_DIRECTION
+	CMP	#4
+	BCS	DOWN_DOWN
+	BCC	TIME_TUNNEL
+
+GOT_CORRECT	CMP	#4
+	BCS	TIME_TUNNEL
+DOWN_DOWN	INC	<TURN_DIRECTION	; clockwise
+	LDA	<TURN_DIRECTION
+	AND	#7
+	STA	<TURN_DIRECTION	; wrap clock
+AT_POSITION	RTS
+
+TIME_TUNNEL	DEC	<TURN_DIRECTION	; ani clockwise
+	LDA	<TURN_DIRECTION
+	AND	#7
+	STA	<TURN_DIRECTION	; wrap clock
+	RTS
+
+DO_WALKING	LDA	<MAN_HORSE
+	BNE	HORSE_STATE1
+
+	LDA	<JOY_PAD1	; no new direction
+	BIT	#Joy_A	; do a jump?
+	BEQ	SK
+	STZ	<FRAME_INDEX
+	JSR	|LOOK_JUMP	; see if near horse
+	BCC	NORMAL_JUMP
+	LDA	#ON_HORSE_ACT	; get on horsey
+	STA	<SUB_ACTION
+	CLC
+	RTS
+
+NORMAL_JUMP	;LDA	#JUMP_ACT
+	;STA	<SUB_ACTION
+	CLC
+	RTS
+
+SK	STA	<LAST_JOY
+	CMP	#0
+	BEQ	CANTBE
+	ShortI
+	XBA
+	AND	#15
+	ASL	A
+	TAY
+	LongI
+	LDA	|DIRECTION AND $FFFF,Y ; get clock position for joy
+	BMI	CANTBE	; ERROR ?
+	STA	<LAST_DIRECTION	; wanted new one
+	TAY		; take for smooth turning
+	LDA	<MAN_HORSE	; of walking player
+	BNE	CANTBE
+	STY	<TURN_DIRECTION
+
+CANTBE	LDA	<LAST_DIRECTION
+	CMP	<TURN_DIRECTION	; same a current turn
+	BEQ	CAN_WALK
+	DEC	<TURN_SPEED
+	BNE	TURN_DEL
+	LDA	#4
+	STA	<TURN_SPEED
+	JSR	|UPDATE_TURN	; update turning only EXIT
+TURN_DEL	LDA	<TURN_DIRECTION	; prev
+	ASL	A
+	TAY
+	LDA	|INV_DIRECTION AND $FFFF,Y
+	STA	<LAST_JOY	; new movement position
+	JMP	|SET_GO	;USE_LASTK
+
+HORSE_STATE1	LDA	<JOY_PAD1	; no new direction
+	BIT	#Joy_A	; do a jump?
+	BEQ	CAN_WALK	;SK
+	STZ	<FRAME_INDEX
+	STZ	<PLAYER_FRAME	; stand horse still
+	LDA	<TURN_DIRECTION
+	STA	<HORSE_DIRECTION	; save horses direction
+	LDA	#OFF_HORSE_ACT	; get of horses back
+	STA	<SUB_ACTION
+	CLC
+	RTS
+
+CAN_WALK	LDA	<WALK_SPEED	; now do a animation
+	BEQ	ANISP
+	DEC	<WALK_SPEED
+	BRA	USE_LASTK
+
+	; New Joystick Reading For Positioning
+ANISP	JSR	|UPDATE_TURN
+	LDA	<TURN_DIRECTION
+	CMP	<LAST_DIRECTION
+	BEQ	ALL_RIGHT_WAY	; keep turning until @ prop dir
+SET_AMOVE	LDA	<TURN_DIRECTION
+	ASL	A
+	TAY
+	LDA	|INV_DIRECTION AND $FFFF,Y
+	STA	<LAST_JOY	; new movement position
+	BRA	SET_GO
+
+ALL_RIGHT_WAY	LDA	<HORSE_TURN	; moved when a turn
+	BEQ	MORE_MOVE
+	STZ	<HORSE_TURN
+	BRA	SET_AMOVE
+
+MORE_MOVE	LDA	<JOY_PAD1	; get new direction
+	STA	<LAST_JOY	; prev press key save
+	BEQ	NO_NEW_MOVE
+	ShortI
+	XBA
+	AND	#15
+	ASL	A
+	TAY
+	LongI
+	LDA	|DIRECTION AND $FFFF,Y ; get clock position for joy
+	BMI	SET_GO	; ERROR ?
+	STA	<LAST_DIRECTION	; wanted new one
+	CMP	<TURN_DIRECTION	; same walk position
+	BEQ	ITIS
+	LDA	#1
+	STA	<HORSE_TURN
+
+ITIS	LDA	<TURN_DIRECTION	; prev
+	ASL	A
+	TAY
+	LDA	|INV_DIRECTION AND $FFFF,Y
+	STA	<LAST_JOY	; new movement position
+SET_GO	LDA	#20	; 14
+	STA	<WALK_SPEED
+
+USE_LASTK	LDA	<LAST_JOY
+	AND	#Joy_Left+Joy_Right+Joy_Up+Joy_Down
+	BEQ	NO_NEW_MOVE
+	DEC	<ANIMATE_SPEED
+	BNE	DIRTYB
+	LDA	#6
+	STA	<ANIMATE_SPEED
+	LDA	<FRAME_INDEX
+	INC	A
+	CMP	#6
+	BCC	INR1
+	LDA	#0	; reset back to zero
+INR1	STA	<FRAME_INDEX
+	INC	A	; walk starts @ 1
+	STA	<PLAYER_FRAME	; now as the frame
+DIRTYB	LDA	<LAST_JOY
+	XBA
+	AND	#15
+	ASL	A
+	TAX
+	;MONST
+	JSR	(MOVE_DIRECTION,X)
+	SEC
+	RTS
+
+NO_NEW_MOVE	STZ	<PLAYER_FRAME	; stand frame
+	LDA	#1
+	STA	<ANIMATE_SPEED
+ERROR	LDX	#0
+	TXY
+NOW_UP_POS	SEC
+	RTS
+
+	; Move Direction From Joy byte
+MOVE_DIRECTION	WORD	ERROR	; nothing there
+	WORD	EAST	; right (1)
+	WORD	WEST	; left (2)
+	WORD	ERROR	; impossible
+	WORD	SOUTH	; down (4)
+	WORD	SOUTH_EAST	; down & right (5)
+	WORD	SOUTH_WEST	; down & left (6)
+	WORD	ERROR	; impossible
+	WORD	NORTH	; up (8)
+	WORD	NORTH_EAST	; up & right (9)
+	WORD	NORTH_WEST	; up & left (10)
+	WORD	ERROR
+	WORD	ERROR
+	WORD	ERROR
+	WORD	ERROR
+	WORD	ERROR
+
+NORTH_EAST	JSR	|RIDE_UP
+	JMP	|RIDE_RIGHT
+EAST	LDY	#0
+	JMP	|RIDE_RIGHT
+SOUTH_EAST	JSR	|RIDE_RIGHT
+	JMP	|RIDE_DOWN
+SOUTH	LDX	#0
+	JMP	|RIDE_DOWN
+SOUTH_WEST	JSR	|RIDE_DOWN
+	JMP	|RIDE_LEFT
+WEST	LDY	#0
+	JMP	|RIDE_LEFT
+NORTH_WEST	JSR	|RIDE_LEFT
+	JMP	|RIDE_UP
+NORTH	LDX	#0
+	JMP	|RIDE_UP
+
+RIDE_LEFT	LDA	<MAN_HORSE	; walk or ride
+	BEQ	WALK_LEFT
+	JSR	|HIT_HORSE_LEFT	; horse hit side
+	BEQ	NO_SCROLL_LEFT
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	CMP	#4	; window
+	BCC	NO_SCROLL_LEFT
+	SBC	#2
+	STA	|SPRITE_WORLDX+PLAY_SPR
+	SEC
+	SBC	<WORLD_X
+	CMP	#XMAP_START
+	BCS	NO_SCROLL_LEFT
+	LDX	#-2
+	RTS
+
+WALK_LEFT	JSR	|HIT_LEFT_SIDE	; players side
+	BEQ	NO_SCROLL_LEFT
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	CMP	#4	; window
+	BCC	NO_SCROLL_LEFT
+	SBC	#1
+	STA	|SPRITE_WORLDX+PLAY_SPR
+	JSR	|HIT_HORSE	; make sure not hit horse
+	BCS	HAVE_HIT1
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	SEC
+	SBC	<WORLD_X
+	CMP	#XMAP_START
+	BCS	NO_SCROLL_LEFT
+	LDX	#-1
+	RTS
+HAVE_HIT1	INC	|SPRITE_WORLDX+PLAY_SPR
+NO_SCROLL_LEFT	LDX	#0
+	RTS
+
+RIDE_RIGHT	LDA	<MAN_HORSE	; walk or ride
+	BEQ	WALK_RIGHT
+	JSR	|HIT_HORSE_RIGHT	; horse hit side
+	BEQ	NO_SCROLL_RIGHT
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	CMP	#{MAPX MULT 8}-64-6
+	BCS	NO_SCROLL_RIGHT
+	ADC	#2	; c=0
+	STA	|SPRITE_WORLDX+PLAY_SPR
+	SEC
+	SBC	<WORLD_X	; get size difference
+	CMP	#XMAP_STOP-32	; box size
+	BCC	NO_SCROLL_RIGHT
+	LDX	#2
+	RTS
+
+WALK_RIGHT	JSR	|HIT_RIGHT_SIDE	; players side
+	BEQ	NO_SCROLL_RIGHT
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	CMP	#{MAPX MULT 8}-64-6
+	BCS	NO_SCROLL_RIGHT
+	CLC
+	ADC	#1
+	STA	|SPRITE_WORLDX+PLAY_SPR
+	JSR	|HIT_HORSE	; make sure not hit horse
+	BCS	HAVE_HIT2
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	SEC
+	SBC	<WORLD_X	; get size difference
+	CMP	#XMAP_STOP-32	; box size
+	BCC	NO_SCROLL_RIGHT
+	LDX	#1
+	RTS
+HAVE_HIT2	DEC	|SPRITE_WORLDX+PLAY_SPR
+NO_SCROLL_RIGHT	LDX	#0
+	RTS
+
+RIDE_DOWN	LDA	<MAN_HORSE
+	BEQ	WALK_DOWN
+	JSR	|HORSE_FEET	; below horse feet
+	BEQ	NO_SCROLL_DOWN
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	CMP	#{MAPY MULT 8}-64-1	; not off map
+	BCS	NO_SCROLL_DOWN
+	ADC	#2 ;1	; C=0
+	STA	|SPRITE_WORLDY+PLAY_SPR
+	SEC
+	SBC	<WORLD_Y
+	CMP	#YMAP_STOP-32	; minus sprite size
+	BCC	NO_SCROLL_DOWN
+	LDY	#2
+	RTS
+
+WALK_DOWN	JSR	|BELOW_FEET	; below players feet
+	BEQ	NO_SCROLL_DOWN
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	CMP	#{MAPY MULT 8}-64-1	; not off map
+	BCS	NO_SCROLL_DOWN
+	CLC
+	ADC	#1
+	STA	|SPRITE_WORLDY+PLAY_SPR
+	JSR	|HIT_HORSE	; make sure not hit horse
+	BCS	HAVE_HIT3
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	SEC
+	SBC	<WORLD_Y
+	CMP	#YMAP_STOP-32	; minus sprite size
+	BCC	NO_SCROLL_DOWN
+	LDY	#1
+	RTS
+HAVE_HIT3	DEC	|SPRITE_WORLDY+PLAY_SPR
+NO_SCROLL_DOWN	LDY	#0
+	RTS
+
+RIDE_UP	LDA	<MAN_HORSE
+	BEQ	WALK_UP
+	JSR	|HORSE_TOES	; above horses hooves
+	BEQ	NO_SCROLL_UP
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	CMP	#2	; 0 OR 1
+	BCC	NO_SCROLL_UP
+	;SEC
+	SBC	#2 ;1
+	STA	|SPRITE_WORLDY+PLAY_SPR
+	SEC
+	SBC	<WORLD_Y
+	CMP	#YMAP_START
+	BCS	NO_SCROLL_UP
+	LDY	#-2
+	RTS
+
+WALK_UP	JSR	|ON_TOES	; hit above feet
+	BEQ	NO_SCROLL_UP
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	BEQ	NO_SCROLL_UP
+	SEC
+	SBC	#1
+	STA	|SPRITE_WORLDY+PLAY_SPR
+	JSR	|HIT_HORSE	; make sure not hit horse
+	BCS	HAVE_HIT4
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	SEC
+	SBC	<WORLD_Y
+	CMP	#YMAP_START
+	BCS	NO_SCROLL_UP
+	LDY	#-1
+	RTS
+HAVE_HIT4	INC	|SPRITE_WORLDY+PLAY_SPR
+NO_SCROLL_UP	LDY	#0
+	RTS
+
+	; OLD CODE FOR UPDATE OF SCROLL POSITION
+	; DONT USE AS WHEN GET OFF HORSE
+	; SCROLL WILL ALLWAYS MOVE (DON'T WANT THIS
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	SEC
+	SBC	<WORLD_X	; players world
+	BMI	BACK1
+	CMP	#XMAP_START-1
+	BCC	BACK1
+	CMP	#XMAP_STOP-31
+	BCC	NOTINX
+	LDX	#2
+	BRA	NOTINX
+BACK1	LDX	#-2
+NOTINX	LDA	|SPRITE_WORLDY+PLAY_SPR
+	SEC
+	SBC	<WORLD_Y
+	BMI	BACKU1
+	CMP	#YMAP_START-1
+	BCC	BACKU1
+	CMP	#XMAP_STOP-31
+	BCC	NOTINY
+	LDY	#2
+	SEC
+	RTS		; C=1 update scroll
+BACKU1	LDY	#-2
+NOTINY	SEC		; update scroll
+	RTS
+
+;**-	Player Get on & Off Horse
+DO_OFHORSE	LDA	<TURN_DIRECTION	; what way faceing
+	ASL	A
+	ASL	A	; 8 for each frame
+	ASL	A
+	CLC
+	ADC	<FRAME_INDEX	; add index for 
+	ADC	<FRAME_INDEX
+	TAX
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	ADC	|OFFX_TABLE AND $FFFF,X
+	STA	|SPRITE_WORLDX+PLAY_SPR
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	ADC	|OFFY_TABLE AND $FFFF,X
+	STA	|SPRITE_WORLDY+PLAY_SPR
+	LDA	<FRAME_INDEX
+	ASL	A
+	TAX
+	LDA	|OFF_FRAME AND $FFFF,X
+	STA	<PLAYER_FRAME	; what @
+	LDA	<MAN_HORSE
+	EOR	|REVERSE_MANH AND $FFFF,X
+	STA	<MAN_HORSE
+
+	INC	<FRAME_INDEX
+	LDA	<FRAME_INDEX
+	CMP	#4	; last entry
+	BNE	DELAY_OFF
+
+	LDA	#WALK_ACT
+	STA	<SUB_ACTION	; back to walk
+DELAY_OFF	CLC
+	RTS
+
+
+	; Get off Horse Sequence
+OFF_FRAME	WORD	12,13,13,0	;
+REVERSE_MANH	WORD	-1,0,0,0
+
+
+OFFX_TABLE	WORD	16,2,4,9	;0
+	WORD	16,2,2,2	;1
+	WORD	16,-3,0,2	;2
+	WORD	16,-5,-5,-5	;3
+	WORD	16,-7,-4,-5	;4
+	WORD	16,5,5,5	;5
+	WORD	16,3,0,-2	;6
+	WORD	16,-2,-2,-2	;7
+
+OFFY_TABLE	WORD	8,3,6,0	;0
+	WORD	6,2,13,2;1	;1
+	WORD	4,7,9,1	;2
+	WORD	8,3,10,2;1	;3
+	WORD	7,5,6,1	;4
+	WORD	8,3,10,1	;5
+	WORD	4,7,9,1	;6
+	WORD	6,2,13,2	;7
+
+	; Player Do a Jump
+DO_ONHORSE	LDA	<TURN_DIRECTION	; what way faceing
+	ASL	A
+	ASL	A
+	ASL	A
+	ASL	A	; 16 for each frame
+	CLC
+	ADC	<FRAME_INDEX	; add index for 
+	ADC	<FRAME_INDEX
+	TAX
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	ADC	|HORSEX_TABLE AND $FFFF,X
+	STA	|SPRITE_WORLDX+PLAY_SPR
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	ADC	|HORSEY_TABLE AND $FFFF,X
+	STA	|SPRITE_WORLDY+PLAY_SPR
+	LDA	<FRAME_INDEX
+	ASL	A
+	TAX
+	LDA	|HORSE_FRAMET AND $FFFF,X
+	STA	<PLAYER_FRAME	; what @
+	INC	<FRAME_INDEX
+	LDA	<FRAME_INDEX
+	CMP	#5	; last entry
+	BNE	DELAY_JUMP
+
+	LDA	<MAN_HORSE
+	EOR	#-1
+	STA	<MAN_HORSE	; now on the horse
+
+	LDA	#1
+	STA	<PLAYER_FRAME
+
+	LDA	|SPRITE_WORLDX+HORSE_SPR
+	STA	|SPRITE_WORLDX+PLAY_SPR
+	LDA	|SPRITE_WORLDY+HORSE_SPR
+	STA	|SPRITE_WORLDY+PLAY_SPR
+
+	JSR	|ITIS
+
+
+DO_JUMP	LDA	#WALK_ACT
+	STA	<SUB_ACTION	; back to walk
+DELAY_JUMP	CLC
+	RTS
+
+HORSE_FRAMET	WORD	8,1,9,10,7
+
+HORSEX_TABLE	WORD	0,0,0,0,0,0,0,0	;0
+	WORD	0,0,3,3,4,0,0,0	;1
+	WORD	0,2,13,5,8,0,0,0	;2
+	WORD	0,3,3,7,6,0,0,0	;3
+	WORD	0,0,0,0,0,0,0,0	;4
+
+	WORD	0,-3,-3,-7,-6,0,0,0	;5 -3
+	WORD	0,-2,-13,-5,-8,0,0,0	;6 -2
+	WORD	0,0,-3,-3,-4,0,0,0	;7 -1
+
+
+HORSEY_TABLE	WORD	0,0,-8,-6,-6,0,0,0	;0
+	WORD	0,0,-12,-7,-6,0,0,0	;1
+	WORD	0,-1,-11,-6,-2,0,0,0	;2
+	WORD	0,3,-11,0,0,0,0,0	;3
+	WORD	0,3,3,1,1,0,0,0	;4
+
+	WORD	0,3,-11,0,0,0,0,0	;5 -3
+	WORD	0,-1,-11,-6,-2,0,0,0	;6 -2
+	WORD	0,0,-12,-7,-6,0,0,0	;7 -1
+
+
+;**-	Player Fire Gun
+
+DO_FIREGUN	LDY	<FRAME_INDEX
+	LDA	|FIRE_ACT_FR AND $FFFF,Y
+	STA	<PLAYER_FRAME
+	INY
+	INY
+	STY	<FRAME_INDEX
+	CPY	#10	; last entry
+	BEQ	SET_FI
+	CPY	#24
+	BNE	NORACT
+	LDA	#-1
+	STA	<CROSS_HAIR	; put back last position
+	LDA	#WALK_ACT
+	STA	<SUB_ACTION	; back to walk
+NORACT	CLC
+	RTS
+
+SET_FI	JSR	|SET_BULLET
+	CLC
+	RTS
+
+
+FIRE_ACT_FR	WORD	14,15,16,17,18,19
+	WORD	19,18,17,16,15,14
+
+
+	; Distance between horse and player (for jump on horse)
+HDISTANCEX	LDA	|SPRITE_WORLDX+PLAY_SPR	; get distance for this sprite
+	SEC
+	SBC	|SPRITE_WORLDX+HORSE_SPR
+	BCC	TAKE5		; sprite is the bigger
+	STA	<MIKE1
+	LDA	#0		; horse to left of player
+	RTS
+
+TAKE5	LDA	|SPRITE_WORLDX+HORSE_SPR
+	SEC
+	SBC	|SPRITE_WORLDX+PLAY_SPR
+	STA	<MIKE1
+	LDA	#-1		; horse to right of player
+	RTS
+
+HDISTANCEY	LDA	|SPRITE_WORLDY+PLAY_SPR	; get distance for this sprite
+	SEC
+	SBC	|SPRITE_WORLDY+HORSE_SPR
+	BCC	TAKE6		; sprite is the bigger
+	STA	<MIKE1
+	LDA	#0		; horse to top of player
+	RTS
+
+TAKE6	LDA	|SPRITE_WORLDY+HORSE_SPR
+	SEC
+	SBC	|SPRITE_WORLDY+PLAY_SPR
+	STA	<MIKE1
+	LDA	#-1		; horse below player
+	RTS
+
+;**-	See if when want to jump if need to get on Horse
+	; Have allowed 1 pixel either side for perfect sequence
+	; sets to right position when do jump
+LOOK_JUMP	LDA	<TURN_DIRECTION	; see what way player and horse
+	CMP	<HORSE_DIRECTION	; are same position
+	BNE	DIFF_DIR
+	ASL	A
+	TAY
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	;CLC
+	ADC	|SEE_XPOS AND $FFFF,Y	
+	SEC
+	SBC	|SPRITE_WORLDX+HORSE_SPR
+
+	CMP	#5	; distance around
+	BCC	INRNG1	; ignore and exit
+	CMP	#-5
+	BCC	DIFF_DIR
+	EOR	#-1
+	INC	A
+INRNG1	STA	<MIKE1
+
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	CLC
+	ADC	|SEE_YPOS AND $FFFF,Y
+	SEC
+	SBC	|SPRITE_WORLDY+HORSE_SPR
+
+	CMP	#5	; distance around
+	BCC	INRNG2	; ignore and exit
+	CMP	#-5
+	BCC	DIFF_DIR
+	EOR	#-1
+	INC	A
+INRNG2	STA	<MIKE2
+
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	CLC
+	ADC	<MIKE1
+	STA	|SPRITE_WORLDX+PLAY_SPR
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	ADC	<MIKE2
+	STA	|SPRITE_WORLDY+PLAY_SPR
+	SEC	
+	RTS
+
+DIFF_DIR	CLC
+	RTS
+
+
+SEE_XPOS	WORD	-$10	; 0
+	WORD	$02	; 1
+	WORD	$07	; 2
+	WORD	$03	; 3
+	WORD	-$10	; 4
+	WORD	-$1f	; 5
+	WORD	-$27	; 6
+	WORD	-$21	; 7
+
+SEE_YPOS	WORD	-$1E	; distance from horse
+	WORD	-$17	; 1
+	WORD	-$0B	; 2
+	WORD	-$07	; 3
+	WORD	-$08	; 4
+	WORD	-$08	; 5
+	WORD	-$0D	; 6
+	WORD	-$17	; 7
+
+
+;**+	Sprite - Background Collision
+
+HIT_OBJ	EQU	1
+
+HIT_HORSE_LEFT	LDA	#4
+	BRA	DO_CHECKX
+HIT_HORSE_RIGHT	LDA	#6
+	BRA	DO_CHECKX
+HIT_LEFT_SIDE	LDA	#0
+	BRA	DO_CHECKX
+HIT_RIGHT_SIDE	LDA	#2
+DO_CHECKX	PHX
+	PHY
+	TAX
+	LDY	#PLAY_SPR	; hit player
+	LDA	|SPRITE_WORLDX,Y	; index as world cord
+	CLC
+	ADC	|XADD_OFF1 AND $FFFF,X
+	STA	<XTEMP
+	LDA	|SPRITE_WORLDY,Y
+	CLC
+	ADC	|YADD_OFF1 AND $FFFF,X	; where below feet is
+	STA	<YTEMP
+	JSR	|HIT_OBJECT
+	BRA	GOT_HIT
+
+XADD_OFF1	WORD	7	; left side
+	WORD	25	; right side
+	WORD	10	; HORSE LEFT
+	WORD	40	; HORSE RIGHT
+
+YADD_OFF1	WORD	30	; left side
+	WORD	30	; right side
+	WORD	40	; HORSE LEFT
+	WORD	40	; HORSE RIGHT
+
+HORSE_TOES	LDA	#4
+	BRA	DO_CHECKY
+HORSE_FEET	LDA	#6
+	BRA	DO_CHECKY
+ON_TOES	; Hit Above Players Feet walk Up screen
+	LDA	#0
+	BRA	DO_CHECKY
+BELOW_FEET	; Hit Below Players Feet walk Down screen
+	LDA	#2
+DO_CHECKY	PHX
+	PHY
+	TAX
+	LDY	#PLAY_SPR	; hit player
+	LDA	|SPRITE_WORLDY,Y	; index as world cord
+	CLC
+	ADC	|YADD2_OFF AND $FFFF,X
+	STA	<YTEMP
+	LDA	|SPRITE_WORLDX,Y
+	CLC
+	ADC	|XADD2_OFF AND $FFFF,X
+	STA	<XTEMP
+	JSR	|HIT_OBJECT
+	BEQ	GOT_HIT	; hit first part
+	INY
+	INY
+	LDA	[MIKE1],Y	; get map word
+	AND	#1024-1	; only valid bits
+	TAX
+	LDA	|COLLIDE_MAP AND $FFFF,X
+	AND	#255	; now look @ second
+GOT_HIT	PLY
+	PLX
+	CMP	#HIT_OBJ
+	RTS
+
+YADD2_OFF	WORD	24	; on toes
+	WORD	31	; below feet
+	WORD	38	; HORSE TOES
+	WORD	48	; HORSE FEET
+
+XADD2_OFF	WORD	16	; on toes
+	WORD	16	; below feet
+	WORD	32	; HORSE TOES
+	WORD	32	; HORSE FEET
+
+
+HIT_OBJECT	LDA	<YTEMP	; Y POSITION
+	AND	#%1111111111111000
+	LSR	A
+	LSR	A
+	TAX
+	LDA	<XTEMP	; X POSITION
+	AND	#%1111111111111000
+	LSR	A
+	LSR	A
+	TAY
+	LDA	|GMAP_L AND $FFFF,X	; source pointer
+	STA	<MIKE1
+	LDA	#SEG USER_RAM2	; pointer to user ram setting
+	STA	<MIKE1_BANK
+	LDA	[MIKE1],Y	; get map word
+	AND	#1024-1	; only valid bits
+	STA	<DEBUG5
+	TAX
+	LDA	|COLLIDE_MAP AND $FFFF,X
+	AND	#255
+	CMP	#HIT_OBJ
+	RTS
+
+	; Will have to build collision map in memory
+	; as data will need to be changes to suit terrain!
+COLLIDE_MAP	BYTE	0
+	BYTE	0
+	SKIP	1022,1	; rest blank for test	
+
+;**-	Look Ahead of Player with all bounds checking
+
+PAN_SCREEN	LDX	#0
+	TXY
+	BIT	#Joy_Right	; 
+	BEQ	NOR
+	LDX	#2	; advance amount
+NOR	BIT	#Joy_Left
+	BEQ	NOL
+	LDX	#-2
+NOL	BIT	#Joy_Up
+	BEQ	NOU
+	LDY	#-2
+NOU	BIT	#Joy_Down
+	BEQ	NOD
+	LDY	#2
+NOD	; Now Do Update
+	CPX	#0
+	BEQ	NOWY
+	LDA	|SPRITE_WORLDX+PLAY_SPR
+	SEC
+	SBC	<WORLD_X	; players world
+	CPX	#-2
+	BEQ	BIGX1
+	CMP	#2	; left of screen
+	BCC	KILL_MOVEX
+	BRA	NOWY
+BIGX1	CMP	#PAN_STOPX	; far right of screen
+	BCC	NOWY
+KILL_MOVEX	LDX	#0	; dont do a move
+
+NOWY	CPY	#0
+	BEQ	MOVE_WORLD1	; no movement at all (silly)
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	SEC
+	SBC	<WORLD_Y
+	CPY	#-2
+	BEQ	BIGY1
+	CMP	#2
+	BCC	KILL_MOVEY
+	BRA	MOVE_WORLD1
+BIGY1	CMP	#PAN_STOPY
+	BCC	MOVE_WORLD1
+KILL_MOVEY	LDY	#0
+MOVE_WORLD1	RTS
+
+;**-	Cross Hair movement
+
+SET_CROSS	LDA	|SPRITE_WORLDX+PLAY_SPR; position sights @
+	CLC
+	ADC	#6
+	AND	#-2	; evens
+	STA	|SPRITE_WORLDX+CROS_SPR; players position
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	ADC	#2
+	AND	#-2	; evens
+	STA	|SPRITE_WORLDY+CROS_SPR
+	LDA	<WORLD_X
+	ADC	#256-32-2	; right of world
+	STA	<MAX_X
+	LDA	<WORLD_Y
+	ADC	#224-32+4
+	STA	<MAX_Y	; bottom of world
+	LDA	#%0011010000000000+$80 ; cross hair test
+	STA	|SPRITE_ATTRIBS+CROS_SPR
+	STA	<CROSS_HAIR	; now in use
+	LDX	#CROS_SPR
+	JMP	|MAP_THIS	; only puy cross sprite here
+
+CROSS_MOVE	LDA	<JOY_PAD1
+	BIT	#Joy_R	; top left or right
+	BEQ	BACK_TO_WALK	; NO then normal walk
+	; Move Cross Sights
+	JSR	|MOVE_SIGHTS	; cross hair movement
+	LDA	<SUB_ACTION
+	CMP	#FIRE_ACT	; want to fire gun
+	BNE	OLDSTUFF
+	JSR	|MAIN_MOVES	; do fire action
+	LDX	#CROS_SPR
+	JMP	|MAP_THIS	; only puy cross sprite here
+
+OLDSTUFF	JSR	|SET_FACEING
+	STZ	<PLAYER_FRAME
+	JSR	|FRAME_TABLE	; set animation
+	JSR	|MAP_SPRITES
+	LDX	#CROS_SPR
+	JMP	|MAP_THIS	; only puy cross sprite here
+
+	; Set back to 
+BACK_TO_WALK	STZ	<CROSS_HAIR	; clear last use
+	LDA	#%0011000000000000+$88	; blank sprite for now
+	STA	|SPRITE_ATTRIBS+CROS_SPR
+SET_FACEING	JSR	|FIND_BEARING
+	ASL	A
+	TAY
+	LDA	|DIRECTION AND $FFFF,Y
+	STA	<LAST_DIRECTION
+	STA	<TURN_DIRECTION	; keep faceing here
+	RTS
+
+
+	; extra 8 pixels is for window
+SPRITE_LEFTX	EQU	-32+8	; off left side
+SPRITE_RIGHTX	EQU	256-8
+SPRITE_TOPY	EQU	-32
+SPRITE_BOTTOMY	EQU	224
+
+CROSS_SPEED	EQU	2;1	; pixel to move
+
+	; Cross Hair For Sights
+MOVE_SIGHTS	LDA	<JOY_PAD1
+	TAY
+	BIT	#Joy_Right	; right
+	BEQ	NOCR
+	LDA	|SPRITE_WORLDX+CROS_SPR
+	CMP	<MAX_X
+	BCS	NOCR
+	ADC	#CROSS_SPEED
+	STA	|SPRITE_WORLDX+CROS_SPR
+
+NOCR	TYA
+	BIT	#Joy_Left
+	BEQ	NOCL
+	LDA	|SPRITE_WORLDX+CROS_SPR
+	TAX
+	SEC
+	SBC	<WORLD_X
+	CMP	#9	; 8 or less
+	BCC	NOCL
+	TXA
+	SBC	#CROSS_SPEED
+	STA	|SPRITE_WORLDX+CROS_SPR
+
+NOCL	TYA
+	BIT	#Joy_Down
+	BEQ	NOCD
+	LDA	|SPRITE_WORLDY+CROS_SPR
+	CMP	<MAX_Y	; not off map
+	BCS	NOCD
+	ADC	#CROSS_SPEED
+	STA	|SPRITE_WORLDY+CROS_SPR
+	
+NOCD	TYA
+	BIT	#Joy_Up
+	BEQ	NOCU
+	LDA	|SPRITE_WORLDY+CROS_SPR
+	TAX
+	SEC	
+	SBC	<WORLD_Y
+	CMP	#2
+	BCC	NOCU
+	TXA
+	SBC	#CROSS_SPEED
+	STA	|SPRITE_WORLDY+CROS_SPR
+NOCU	TYA
+	BIT	#Joy_B	; FIRE a bullet
+	BEQ	NOT_FIRE
+
+
+	LDA	<MAN_HORSE	; not yet any way!
+	BNE	NOT_FIRE
+
+
+	LDA	|BULLET_THERE	; already in use dont do yet
+	BNE	NOT_FIRE
+
+	LDA	#FIRE_ACT
+	STA	<SUB_ACTION	; back to walk
+	STZ	<FRAME_INDEX	; init counter
+	;STZ	<CROSS_HAIR	; kill move cross
+
+	;JSR	|SET_BULLET
+NOT_FIRE	RTS
+
+
+FIND_BEARING	JSR	|DISTANCEX
+	BPL	SECONDHALF
+	LDA	#0
+	BRA	GOTIT
+SECONDHALF	LDA	#8
+GOTIT	STA	<TEMP1	; as index for table base
+	JSR	|DISTANCEY
+	BPL	ADE
+	LDA	<TEMP1
+	ORA	#4	; down on player
+	STA	<TEMP1
+ADE	LDA	<MIKE1	; x diff
+	CMP	<MIKE2	; y diff
+	BCS	XBIGGER	; or same as y
+	; y bigger
+	STA	<VAL1	; x as VAL1
+	LDA	<MIKE2	; half y
+	LSR	A
+	STA	<VAL2	; as VAL2
+	LDA	<TEMP1
+	ORA	#2
+	STA	<TEMP1
+	JSR	|DIVIDE
+	CLC
+	ADC	<TEMP1
+	TAY
+	ASSUME	databank FIRST_BANK AND $FF0000
+	LDA	|BEARING_TAB1,Y	; value
+	AND	#255
+	ASSUME	databank COMMON_BANK AND $FF0000
+	RTS
+
+XBIGGER	LDA	<MIKE1
+	LSR	A
+	STA	<VAL2	; as VAL2
+	LDA	<MIKE2	; y length
+	STA	<VAL1	; as VAL1
+CARRY_ON	JSR	|DIVIDE
+	CLC
+	ADC	<TEMP1
+	TAY
+	ASSUME	databank FIRST_BANK AND $FF0000
+	LDA	|BEARING_TAB2,Y	; value
+	AND	#255
+	ASSUME	databank COMMON_BANK AND $FF0000
+	RTS
+
+BEARING_TAB1	;BYTE	0,0,0,1
+	;BYTE	0,0,7,6
+	;BYTE	0,0,15,14
+	;BYTE	0,0,8,9
+
+	BYTE	1,1,8,9
+	BYTE	9,1,4,5
+	BYTE	5,1,8,10
+	BYTE	10,1,4,6
+	BYTE	6
+BEARING_TAB2	;BYTE	3,2,1,0
+	;BYTE	4,5,6,0
+	;BYTE	13,14,14,0
+	;BYTE	12,11,10,0
+
+	BYTE	1,9,9,1
+	BYTE	1,5,5,1
+	BYTE	2,10,10,1
+	BYTE	2,6,6,1
+
+
+VAL1	EQU	XTEMP
+VAL2	EQU	YTEMP
+
+	; VAL1 destroyed
+	; 8 bit division
+	; VAL1 =  VAL1 / VAL2
+	; Remainder in ANS if required
+DIVIDE	LDA	<VAL1
+	STA	|WRDIVL
+	ShortA
+	LDA	<VAL2
+	STA	|WRDIVB
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	LongA
+	LDA	|rddivl
+	BPL	VAL
+	LDA	#0
+VAL	RTS
+
+	; X enemy index
+DISTANCEX	LDA	|SPRITE_WORLDX+PLAY_SPR
+	SEC
+	SBC	|SPRITE_WORLDX+CROS_SPR
+	BCC	TAKE2	; error overflow enemy bigger
+	STA	<MIKE1
+	LDA	#1	; xdir +
+	RTS
+
+	; get x dist when cross is the larger
+TAKE2	LDA	|SPRITE_WORLDX+CROS_SPR
+	SEC
+	SBC	|SPRITE_WORLDX+PLAY_SPR
+	STA	<MIKE1
+	LDA	#-1	; xdir for move -
+	RTS
+
+DISTANCEY	LDA	|SPRITE_WORLDY+PLAY_SPR
+	SEC
+	SBC	|SPRITE_WORLDY+CROS_SPR
+	BCC	TAKE4	; cross the larger
+	STA	<MIKE2
+	LDA	#1	; y dir move +
+	RTS
+
+	; get y distance when cross is the larger
+TAKE4	LDA	|SPRITE_WORLDY+CROS_SPR
+	SEC
+	SBC	|SPRITE_WORLDY+PLAY_SPR
+	STA	<MIKE2
+	LDA	#-1	; y dir move -
+	RTS
+
+;**-	Players Bullet Movement
+	; work parameters for bullet movement (fixed pattern)
+BUL_SPEED	EQU	2	; speed of bullet on screen
+
+MOV_LEFT	EQU	-BUL_SPEED	; minus in x 
+MOV_RIGHT	EQU	BUL_SPEED	; add in x
+MOV_UP	EQU	-BUL_SPEED	; minus in y
+MOV_DOWN	EQU	BUL_SPEED	; add in y
+
+SET_BULLET	LDA	|BULLET_THERE
+	BNE	FIRED_ALREADY
+	LDA	#1	; line draw bullet from players position to crosshair
+	STA	|BULLET_THERE
+	LDA	<TURN_DIRECTION	; faceing
+	ASL	A
+	TAY
+	LDX	#MOV_LEFT	;		b in x
+	LDA	|SPRITE_WORLDX+PLAY_SPR	; players position
+	CLC
+	ADC	|ADJUST_FIREX AND $FFFF,Y
+	STA	|SPRITE_WORLDX+BULL_SPR	; players position
+	SEC
+	SBC	|SPRITE_WORLDX+CROS_SPR	; crosshair position
+	BCS	POSITIVEX	; bullet was the biggest
+	EOR	#$FFFF	; vale of xdifference
+	INC	A
+	LDX	#MOV_RIGHT
+POSITIVEX	STA	|BULLET_XDIFF
+	STX	|BULLET_XDIR
+
+	LDX	#MOV_UP	; default sub in y (enemy from bottom mostly?)
+	LDA	|SPRITE_WORLDY+PLAY_SPR	; players position
+	CLC
+	ADC	|ADJUST_FIREY AND $FFFF,Y
+	STA	|SPRITE_WORLDY+BULL_SPR ; players position
+	SEC
+	SBC	|SPRITE_WORLDY+CROS_SPR	; crosshair position
+	BCS	POSITIVEY	; bullet was the biggest
+	EOR	#$FFFF; vale of xdifference
+	INC	A
+	LDX	#MOV_DOWN
+POSITIVEY	STA	|BULLET_YDIFF
+	STX	|BULLET_YDIR
+
+	LDA	#%0011010000000000+$84 ; bullet sprite
+	STA	|SPRITE_ATTRIBS+BULL_SPR
+
+	; reached here will have abs xdiff,ydiff and x,y move
+	; Now see which direction to use as base movement
+	LDA	|BULLET_YDIFF
+	CMP	|BULLET_XDIFF
+	BCS	USE_Y
+	LDA	|BULLET_XDIFF	; x amount
+	;STA	|BULLET_DIST
+	LSR	A	; as count setup
+	STA	|BULLET_DIST
+	STA	|BULLET_COUNT
+	LDA	#0	; x as base
+	STA	|BULLET_BASE
+FIRED_ALREADY	RTS
+
+USE_Y	;STA	|BULLET_DIST	
+	LSR	A	; y amount
+	STA	|BULLET_DIST
+	STA	|BULLET_COUNT	; as count setup
+	LDA	#-1	; y as base
+	STA	|BULLET_BASE
+NOT_IN_USE	RTS
+
+
+ADJUST_FIREX	WORD	21-8,30-8,32-8,31-8,12-8,1-8,0-8,2-8
+ADJUST_FIREY	WORD	0-8,5-8,11-8,15-8,28-8,11-8,11-8,5-8
+
+	; one update of bullets position
+BULLET_UPDATE	LDA	|BULLET_THERE
+	BEQ	NOT_IN_USE
+	
+	LDA	|BULLET_DIST
+	BNE	MOVE_MORE
+	STZ	|BULLET_THERE	; kill bullet off
+	LDA	#%0011000000000000+$88 ; blank bullet sprite
+	STA	|SPRITE_ATTRIBS+BULL_SPR
+	RTS
+
+MOVE_MORE	DEC	|BULLET_DIST
+	JSR	|MOVE_BULLET
+	LDX	#BULL_SPR
+	JMP	|MAP_THIS
+
+MOVE_BULLET	LDA	|BULLET_BASE
+	BMI	USE_YDIFF
+
+	LDA	|SPRITE_WORLDX+BULL_SPR
+	CLC
+	ADC	|BULLET_XDIR	; do a base move in x direction
+	STA	|SPRITE_WORLDX+BULL_SPR
+
+	LDA	|BULLET_COUNT
+	SEC
+	SBC	|BULLET_YDIFF	; y as error loop
+	STA	|BULLET_COUNT
+	BCS	BELOW1	; when overflow move in other dir
+
+	LDA	|SPRITE_WORLDY+BULL_SPR
+	CLC
+	ADC	|BULLET_YDIR	; othere way is in y
+	STA	|SPRITE_WORLDY+BULL_SPR
+
+	LDA	|BULLET_COUNT
+	CLC
+	ADC	|BULLET_XDIFF	; as error loop
+	STA	|BULLET_COUNT
+BELOW1	RTS
+
+USE_YDIFF	LDA	|SPRITE_WORLDY+BULL_SPR
+	CLC
+	ADC	|BULLET_YDIR	; do a base move in y direction
+	STA	|SPRITE_WORLDY+BULL_SPR
+
+	LDA	|BULLET_COUNT
+	SEC
+	SBC	|BULLET_XDIFF	; x as error loop
+	STA	|BULLET_COUNT
+	BCS	BELOW_M	; when overflow move in other dir
+
+	LDA	|SPRITE_WORLDX+BULL_SPR
+	CLC
+	ADC	|BULLET_XDIR	; do a base move in x direction
+	STA	|SPRITE_WORLDX+BULL_SPR
+
+	LDA	|BULLET_COUNT
+	CLC
+	ADC	|BULLET_YDIFF	; as error loop
+	STA	|BULLET_COUNT
+BELOW_M	RTS
+
+;**-	Map Player Sprites to Screen.
+
+MAP_SPRITES
+	LDA	<MAN_HORSE	; player on horsey
+	BNE	ON_HORSE1	; -1 yes
+	LDA	|SPRITE_WORLDX+PLAY_SPR; use player as world posiition
+	STA	|SPRITE_WORLDX+BACK_SPR
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	STA	|SPRITE_WORLDY+BACK_SPR
+	BRA	LEAVE_LAST
+
+ON_HORSE1	LDA	|SPRITE_WORLDX+PLAY_SPR
+	STA	|SPRITE_WORLDX+HORSE_SPR+0
+	STA	|SPRITE_WORLDX+HORSE_SPR+8
+	CLC
+	ADC	#16
+	STA	|SPRITE_WORLDX+BACK_SPR	; player on horses back
+	ADC	#16
+	STA	|SPRITE_WORLDX+HORSE_SPR+4
+	STA	|SPRITE_WORLDX+HORSE_SPR+12
+
+	LDA	|SPRITE_WORLDY+PLAY_SPR
+	STA	|SPRITE_WORLDY+HORSE_SPR+0
+	STA	|SPRITE_WORLDY+HORSE_SPR+4
+	PHA
+	CLC
+	ADC	<BOUNCE_AMOUNT	; add to man for movement
+	STA	|SPRITE_WORLDY+BACK_SPR
+	PLA
+	ADC	#32
+	STA	|SPRITE_WORLDY+HORSE_SPR+8
+	STA	|SPRITE_WORLDY+HORSE_SPR+12
+
+LEAVE_LAST	LDX	#BACK_SPR
+	JSR	|MAP_THIS
+	LDX	#HORSE_SPR+0
+	JSR	|MAP_THIS
+	LDX	#HORSE_SPR+4
+	JSR	|MAP_THIS
+	LDX	#HORSE_SPR+8
+	JSR	|MAP_THIS
+	LDX	#HORSE_SPR+12
+	;JMP	|MAP_THIS
+
+MAP_THIS	LDY	|SPRITE_OFFSET,X	; index to sprite extra bits
+	LDA	|SPRITE_WORLDX,X
+	SEC
+	SBC	|WORLD_X
+	CMP	#SPRITE_RIGHTX
+	BCC	THIS_ON
+	CMP	#SPRITE_LEFTX+1
+	BCC	OFF_SCREEN
+THIS_ON	ShortA
+	STA	|OBJECT_DATA,X	; to X cord area
+	XBA
+	PHP
+	LDA	|OBJECT_SIZES,Y
+	AND	|SPRITE_UNSET,X
+	PLP
+	BPL	SAVE_THIS
+	ORA	|SPRITE_SET,X
+SAVE_THIS	STA	|OBJECT_SIZES,Y
+	LongA
+	LDA	|SPRITE_WORLDY,X
+	SEC
+	SBC	|WORLD_Y
+	CMP	#SPRITE_BOTTOMY
+	BCC	ON_SCREEN
+	CMP	#SPRITE_TOPY+1
+	BCS	ON_SCREEN
+OFF_SCREEN	LDA	#SPRITE_BOTTOMY
+ON_SCREEN	ShortA
+	STA	|OBJECT_DATA+1,X	; to Y cords area
+	LongA
+NO_SHADOW	RTS
+
+;**-	Includes
+
+
+	#INCLUDE "OVER.ASM"	; Overmap Setup & Control
+	#INCLUDE "TEXT.ASM"	; Options & Selection's
+	#INCLUDE "SCROLL.ASM"	; Scroll Plotting
+	#INCLUDE "MODE7.ASM"	; Mode7 Setup and plot
+	#INCLUDE "SINETAB.ASM"	; SIN Tables for Rotation
+	#INCLUDE "UTILS.ASM"	; Mixed Utilities
+
+;**-	Set Main Game Stuff
+SET_GAME	PHP
+	ShortA_LongI
+	STZ	<NMI_JUMP
+	STZ	|HDMAEN
+
+	LDA	#-1
+	STZ	<MAN_HORSE	; WALKING MAN START
+
+	STZ	|W34SEL
+	LDA	#%00001011	; window1 enabled , OBJ
+	STA	|WOBJSEL
+	LDA	#$30
+	STA	|CGSWSEL
+	LDA	#%10100011
+
+	LDA	#%01100011
+
+	STA	|OBJSEL
+	LDA	#$000/$100	; one screen for BG2
+	STA	|BG2SC
+	LDA	#$800/$100
+	STA	|BG3SC	; Status Screen
+	LDA	#%00000011
+	STA	|BG34NBA	; BG3 @ $3000
+
+	LDX	#0
+	STX	<OVERVIEW_X	; for overview screen
+	STX	<OVERVIEW_Y	; may not need to scroll!
+	STX	<XPLOT_ACT
+	STX	<YPLOT_ACT
+
+	LDX	#224
+	STX	<WORLD_X
+	LDX	#192+16
+	STX	<WORLD_Y
+
+	;STZ	|BG1HOFS	; makesure
+	;STZ	|BG1HOFS	; BG1 @ 0 
+	;LDA	#255
+	;STA	|BG1VOFS
+	;STA	|BG1VOFS
+
+	ASSUME	databank COMMON_BANK AND $FF0000
+
+	LDX	#OFFSET HDMA_DATA
+	STX	|DMA_A1ADDR+DMA4
+	LDA	#SEG HDMA_DATA
+	STA	|DMA_A1ADDRB+DMA4
+	STA	|DMA_HBANK+DMA4	; Set HDMA for ZOOM Windows
+
+
+	LDX	#OFFSET GAME_MAP1	; packed map start
+	LDA	#SEG GAME_MAP1
+	JSR	|UNPACK_DATA	; to RAM
+	; move unpacked data to MAP area
+	LongA
+	TXA		; bytes unpacked left in X
+	DEC	A	; -1 for copy amount
+	LDX	#OFFSET UNPACK_BUFFER	; source data init from ROM
+	LDY	#OFFSET MADEUP_MAP 	; destination RAM copy
+	MVN	#SEG USER_RAM2,#SEG USER_RAM1	; dest , source
+	ShortA
+	LDA	#SEG FIRST_BANK
+	PHA
+	PLB		; select data bank $00
+	JSR	|ALL_SCREEN	; do a one screen redraw from map
+
+	LongA
+	JSR	|INIT_SPRITES	; cords and params
+
+	LDA	#%0011000000000000	; flip,obj col + name
+	STA	|SPRITE_ATTRIBS+HORSE_SPR	; test for sprite 0
+	LDA	#%0011000000000000+4
+	STA	|SPRITE_ATTRIBS+HORSE_SPR+4
+	LDA	#%0011000000000000+8
+	STA	|SPRITE_ATTRIBS+HORSE_SPR+8
+	LDA	#%0011000000000000+12
+	STA	|SPRITE_ATTRIBS+HORSE_SPR+12
+
+	LDA	#%0011000000000000+64	; next avail for player
+	STA	|SPRITE_ATTRIBS+PLAY_SPR
+	STA	|SPRITE_ATTRIBS+BACK_SPR	; on horses back
+
+	STZ	<PLAYER_FRAME
+	LDA	#4
+	STA	<TURN_DIRECTION	; faceing up
+	STA	<LAST_DIRECTION	; what was @
+
+	STZ	<CROSS_HAIR	; cross not in use yet
+			; init table pointer for circle
+	LDA	#%1010101010101010	; big horse. player and cross
+	STA	|OBJECT_SIZES
+
+	LDA	#256+64
+	STA	|SPRITE_WORLDX+PLAY_SPR
+	LDA	#256+64	; middle
+	STA	|SPRITE_WORLDY+PLAY_SPR
+
+
+	STZ	<ZOOM_NUMBER	; FOR show only
+	STZ	<ZOOM_DIRECTION	; none working as yet
+	STZ	<LAST_JOY
+	STZ	<PLAYER_FRAME
+
+	JSR	|FRAME_TABLE
+
+	LDA	#256+32
+	STA	|SPRITE_WORLDX+HORSE_SPR
+	LDA	#256+32	; middle
+	STA	|SPRITE_WORLDY+HORSE_SPR
+
+	LDA	#6
+	STZ	<HORSE_DIRECTION	; what horse is @
+	LDA	#$8000
+	STA	<HORSE_SPRITES
+	LDA	#SEG HORSE0	; stand frames
+	STA	<HORSE_BANK
+	JSR	|SET_HORSE_FRAME
+
+	LDA	|SPRITE_WORLDX+HORSE_SPR+0
+	STA	|SPRITE_WORLDX+HORSE_SPR+8
+	CLC
+	ADC	#32
+	STA	|SPRITE_WORLDX+HORSE_SPR+4
+	STA	|SPRITE_WORLDX+HORSE_SPR+12
+	LDA	|SPRITE_WORLDY+HORSE_SPR+0
+	STA	|SPRITE_WORLDY+HORSE_SPR+4
+	ADC	#32
+	STA	|SPRITE_WORLDY+HORSE_SPR+8
+	STA	|SPRITE_WORLDY+HORSE_SPR+12
+
+	PLP
+
+RE_INIT_GAME	PHP
+	ShortA_LongI
+	STZ	<NMI_JUMP
+	STZ	|HDMAEN
+
+	LDA	#8
+	STA	|WH0	; window 1 start
+	LDA	#255-8	; window 1 end
+	STA	|WH1
+	STZ	|WH2	; may have to reset
+	STZ	|WH3
+
+	LDA	#%10111111	; window1 enabled , BG1/2
+	STA	|W12SEL
+	;LDA	#%10011	; BG1/2 + OBJ enabled
+	LDA	#%10111
+	STA	|TM
+	STA	|TS
+	STA	|TMW
+	STA	|TSW
+	LDA	#%00001001	; MODE1. BG1+2+3
+	STA	|BGMODE
+	LDA	#$400/$100	; BG1 can now go above BG2
+	STA	|BG1SC
+	LDA	#%00010001	; BG1 charset @ $3000
+	STA	|BG12NBA	; BG2 charser @ $1000
+
+	; Clear VRAM screen area (no map for NOW)
+	LongA
+	LDA	#%0000110000000000	;+1
+	LDX	#$400	; BG3 AREA CLEARED
+	LDY	#$1000
+	JSR	|CLEAR_VRAM	; A will be ShortA
+
+	AssertM8X16
+	LDX	#OFFSET WINDOW_TEST	; packed map start
+	LDA	#SEG WINDOW_TEST
+	JSR	|UNPACK_DATA	; to RAM
+	LDY	#$0400	; BG 1 TEST DISPLAY
+	JSR	|DMA_TO_VRAM
+
+	LDX	#OFFSET GAME_CHARS1	; packed map start
+	LDA	#SEG GAME_CHARS1
+	JSR	|UNPACK_DATA	; to RAM
+	LDY	#$1000	; BG2 CHARS @ $1000
+	JSR	|DMA_TO_VRAM
+
+	LDX	#OFFSET GAME_CHARS2	; packed map start
+	LDA	#SEG GAME_CHARS2
+	JSR	|UNPACK_DATA	; to RAM
+	LDY	#$3000	; BG3 CHARS @ $3000
+	JSR	|DMA_TO_VRAM
+
+	LDX	#OFFSET CROSS_SPRITE
+	LDA	#SEG CROSS_SPRITE
+	JSR	|UNPACK_DATA
+	LDY	#$6800	; next free line for sprites
+	JSR	|DMA_TO_VRAM
+
+	LDA	#0
+	STA	|CGADD	; start of pallete colours
+	LDX	#256	; 16 sets AND sprite palettes
+	STX	|DMA_COUNT+DMA6
+	LDX	#OFFSET GAME_PALETTES
+	STX	|DMA_A1ADDR+DMA6
+	LDA	#SEG GAME_PALETTES
+	STA	|DMA_A1ADDRB+DMA6
+	LDA	#BIT6
+	STA	|MDMAEN
+
+	LDX	#32+32+32	; 3 sprite palettes for now
+	STX	|DMA_COUNT+DMA6
+	LDX	#OFFSET PLAYER_PALETTE	; same for horse and player
+	STX	|DMA_A1ADDR+DMA6
+	LDA	#SEG PLAYER_PALETTE
+	STA	|DMA_A1ADDRB+DMA6
+	LDA	#BIT6
+	STA	|MDMAEN
+
+	LDX	#OFFSET PLAYER_SPRITES	; packed sprites
+	LDA	#SEG PLAYER_SPRITES
+	JSR	|UNPACK_DATA	; leave in unpack buffer
+
+	LongA
+	JSR	|MAP_SPRITES	; remap all game sprites
+
+	STZ	<LAST_JOY
+
+	LDA	#1
+	STA	|HDMA_DATA
+	STZ	|HDMA_DATA+2
+	LDA	#BIT4	; enable HDMA for Windows
+	STA	|HDMAEN
+
+	LDA	#GAME_NMI
+	STA	<NMI_JUMP	; jump in NMI
+	PLP
+	RTS
+
+SET_CREDIT	PHP
+	ShortA_LongI
+	STZ	<NMI_JUMP
+	STZ	|HDMAEN
+
+	LDA	#1
+	STA	|BG12NBA	; chars start @ $1000
+	;LDA	#1
+	STA	|BGMODE
+	STZ	|BG1SC
+	LDA	#1	; ENABLE ONLY BG1
+	STA	|TM
+	STZ	|TMW
+	STZ	|TS
+	STZ	|TSW
+	STZ	|W12SEL
+
+	STZ	|BG1HOFS	; makesure
+	STZ	|BG1HOFS	; BG1 @ 0 
+	LDA	#255
+	STA	|BG1VOFS
+	STA	|BG1VOFS
+
+	LDX	#OFFSET CREDIT_CHARS	; packed map start
+	LDA	#SEG CREDIT_CHARS
+	JSR	|UNPACK_DATA	; to RAM
+	LDY	#$1000	; BG 1 chars
+	JSR	|DMA_TO_VRAM
+	LDX	#OFFSET CREDIT_MAP	; packed map start
+	LDA	#SEG CREDIT_MAP
+	JSR	|UNPACK_DATA	; to RAM
+	LDY	#$0000	; BG 1 chars
+	JSR	|DMA_TO_VRAM
+
+	LDA	#0
+	STA	|CGADD	; start of pallete colours
+	LDX	#64	; 16 palettes for 256 BG mode
+	STX	|DMA_COUNT+DMA6
+	LDX	#OFFSET CREDIT_PAL
+	STX	|DMA_A1ADDR+DMA6
+	LDA	#SEG CREDIT_PAL
+	STA	|DMA_A1ADDRB+DMA6
+	LDA	#BIT6
+	STA	|MDMAEN
+
+	LDX	#NOTHING_NMI
+	STX	<NMI_JUMP	; jump in NMI
+	PLP
+	RTS
+
+
+;**-	Zooming Window Control
+ZOOM_TEST	ShortA
+	LDA	<ZOOM_DIRECTION
+	BNE	IN_USE
+	ASSUME	databank FIRST_BANK AND $FF0000
+	LongA
+	LDA	#128+{0 MULT 256}
+	STA	<ZOOM_DIRECTION
+	LDX	<ZOOM_NUMBER
+	LDA	|TEST_ZOOM_Y,X
+	STA	<WINDOW_STARTX
+	LDA	|TEST_ZOOM_SIZE,X
+	STA	<ZOOM_SIZE	; also clear TEMP ie 0 start
+	LDA	|TEST_ZOOM_TIME,X
+	STA	<ZOOM_DELAY
+	LDA	<ZOOM_NUMBER
+	CLC
+	ADC	#2
+	CMP	#10
+	BCC	ASD
+	LDA	#0
+ASD	STA	<ZOOM_NUMBER
+IN_USE	LongA
+	RTS
+
+	ASSUME	databank COMMON_BANK AND $FF0000
+
+TEST_ZOOM_Y	WORD	40+{40 MULT 256}	; 128 X 160 Y
+	WORD	200+{40 MULT 256}	; 128 X 160 Y
+	WORD	40+{190 MULT 256}	; 128 X 160 Y
+	WORD	200+{190 MULT 256}	; 128 X 160 Y
+	WORD	128+{112 MULT 256}	; 128 X 160 Y
+
+TEST_ZOOM_SIZE	WORD	32
+	WORD	32
+	WORD	32
+	WORD	32
+	WORD	112
+
+TEST_ZOOM_TIME	WORD	50
+	WORD	10
+	WORD	100
+	WORD	20
+	WORD	200
+
+
+	; Set HDMA data so window @ X,Y will be displayed
+	; X high=right x window low=left x window
+	; Y high=top of window low=bottom of window
+
+
+WINDOW_UPDATE	ShortA
+	BIT	<ZOOM_DIRECTION
+	BMI	OPEN_UP	; open window
+	BVS	CLOSE_DOWN	; close window
+	LDA	<ZOOM_DIRECTION
+	BNE	OPENED
+	STZ	|HDMA_DATA	; 0 end of data then
+	RTS
+
+OPENED	DEC	<ZOOM_DELAY
+	BNE	WAIT_UNTIL
+	LDA	#64	; now close down window
+	STA	<ZOOM_DIRECTION
+WAIT_UNTIL	RTS
+
+GOT_MAX	LDA	#1	; now delay before close down
+	STA	<ZOOM_DIRECTION
+	LDA	#20
+	STA	<ZOOM_DELAY	
+	RTS
+
+CLOSE_DOWN	DEC	<ZOOM_TEMP
+	LDA	<ZOOM_TEMP
+	BNE	SET_CORDS	
+	STZ	<ZOOM_DIRECTION
+	RTS
+
+OPEN_UP	INC	<ZOOM_TEMP
+	LDA	<ZOOM_TEMP
+	CMP	<ZOOM_SIZE	; got to max size
+	BEQ	GOT_MAX
+SET_CORDS	LDA	<WINDOW_STARTX
+	CLC
+	ADC	<ZOOM_TEMP
+	XBA		; save to top bit
+	LDA	<WINDOW_STARTX
+	SEC
+	SBC	<ZOOM_TEMP	; right side of window
+	LongI
+	TAX		; save window sizes now
+	LDA	<WINDOW_STARTY
+	SEC
+	SBC	<ZOOM_TEMP	; bottom of window
+	STA	<MIKE1	; to temp
+	LDA	<WINDOW_STARTY
+	CLC
+	ADC	<ZOOM_TEMP	; top of window
+	SEC
+	SBC	<MIKE1
+	STA	<MIKE2	; height of window
+	LDA	<MIKE1	; get back top
+	CMP	#128	; y top max amount
+	BCC	ENOUGH	; 127 or less
+	PHA
+	LDA	#$7F
+	STA	|HDMA_DATA+0
+	STZ	|HDMA_DATA+1	; poke zeros
+	STZ	|HDMA_DATA+2	
+	PLA
+	SBC	#127	; left to skip
+	STA	|HDMA_DATA+3
+	STZ	|HDMA_DATA+4
+	STZ	|HDMA_DATA+5	; poke zeros here
+	LDA	<MIKE2	; should never be > 128
+	STA	|HDMA_DATA+6
+	STX	|HDMA_DATA+7
+	LDA	#1
+	STA	|HDMA_DATA+9
+	STZ	|HDMA_DATA+10
+	STZ	|HDMA_DATA+11
+	STZ	|HDMA_DATA+12
+	RTS
+
+ENOUGH	STA	|HDMA_DATA+0	; top of window amount
+	STZ	|HDMA_DATA+1
+	STZ	|HDMA_DATA+2
+	LDA	<MIKE2	; window height
+	CMP	#128
+	BCC	SM_WINDOW	; small window
+	PHA
+	LDA	#127
+	STA	|HDMA_DATA+3
+	STX	|HDMA_DATA+4
+	PLA
+	SBC	#127
+	STA	|HDMA_DATA+6
+	STX	|HDMA_DATA+7
+	LDA	#1
+	STA	|HDMA_DATA+9
+	STZ	|HDMA_DATA+10
+	STZ	|HDMA_DATA+11
+	STZ	|HDMA_DATA+12
+	RTS
+
+SM_WINDOW	STA	|HDMA_DATA+3
+	STX	|HDMA_DATA+4	; save length
+	LDA	#1	; one extra
+	STA	|HDMA_DATA+6
+	STZ	|HDMA_DATA+7	; zap window
+	STZ	|HDMA_DATA+8
+	STZ	|HDMA_DATA+9
+	RTS
+
+;**-	Vector Tables
+
+	SEGMENT 'bank0ROM'
+
+	SEGMENT	'vecjmps>vjdata'
+
+RESETjmp	JMP	>RESETentry
+NMIjmp	JMP	>NMIentry
+BRKentry	JMP	|unusedvec
+COPentry
+ABORTentry
+IRQentry
+unusedvec	CLC		; in case got in to emulation mode somehow
+	XCE
+	JMP	|unusedvec
+
+	SEGMENT 'vectors>vecdata'
+
+COPvec	WORD	COPentry
+BRKvec	WORD	BRKentry
+ABRTvec	WORD	ABORTentry
+NMIvec	WORD	NMIjmp
+	WORD	unusedvec
+IRQvec	WORD	IRQentry
+
+	WORD	0
+	WORD	0
+	WORD	unusedvec	; COP
+	WORD	unusedvec	; BRK
+	WORD	unusedvec	; ABORT
+	WORD	unusedvec	; NMI
+RSTvec	WORD	RESETjmp
+	WORD	unusedvec	; IRQ
+
+
+;**-	GAME Data
+
+	SEGMENT 'bank1ROM'
+	
+	SKIP	16,0	; bug!
+
+LOGO_MAP	#LOAD	"LOGOMAP.PAK"
+LOGO_CHARS	#LOAD	"LOGOCHR.PAK"
+LOGO_PALETTE	#LOAD	"LOGO.PAL"
+
+GAME_MAP1	#LOAD	"TOWNMAP.PAK"
+GAME_CHARS1	#LOAD	"TOWNCHR.PAK"
+GAME_PALETTES	#LOAD	"TOWN.PAL"	; 8 BG palettes
+GAME_CHARS2	#LOAD	"HEXCHR.PAK"
+WINDOW_TEST	#LOAD	"WINDOW.PAK"	; test window for zooming boxes
+CROSS_SPRITE	#LOAD	"CROSSSPR.PAK"	; cross hair store to VRAM
+
+CREDIT_CHARS	#LOAD	"CREDCHR.PAK"
+CREDIT_MAP	#LOAD	"CREDMAP.PAK"
+CREDIT_PAL	#LOAD	"CREDITS.PAL"
+
+
+	SEGMENT	'bank2ROM'
+DUCK_SPRITES	#LOAD	"DUCKSPR.PAK"	; duck sprites + crosshair
+PASS_CHARS	#LOAD	"PASSWORD.PAK"	; password screen characters
+PASS_PAL	#LOAD	"F3.PAL"	; (0) 2x2 fonts
+	#LOAD	"F1.PAL"	; (1) select object
+	#LOAD	"8FONT1.PAL"	; (2) 1x1 fonts
+	#LOAD	"DUCKBACK.PAL"	; background screen (3,4)
+
+	#LOAD	"DUCK.PAL"	; duck shoot sprite's
+
+OVER_MAP	#LOAD	"BLACKMAP.PAK"
+OVER_PALETTE	#LOAD	"BLACK.PAL"
+OVER_CHARSET2	#LOAD	"BLACKCHB.SF8"
+
+	SEGMENT	'bank3ROM'
+OVER_CHARSET1	#LOAD	"BLACKCHA.SF8"
+
+	SEGMENT	'bank4ROM'
+TITLE_CHARSET	#LOAD	"TITLECHR.PAK"
+TITLE_PALETTE	#LOAD	"TITLE.PAL"	; 16 title page palettes
+	SEGMENT	'bank5ROM'
+
+PLAYER_SPRITES	#LOAD	"TEXAN.PAK"	; all rider frames on horse
+PLAYER_PALETTE	#LOAD	"PLAYER.PAL"	; horse same as players sprites
+
+	SEGMENT	'bank6ROM'
+DUCKMAP	#LOAD	"DUCKMAP.PAK"
+DUCKCHR	#LOAD	"DUCKBACK.PAK"
+
+	SEGMENT	'bank7ROM'
+HORSE1	#LOAD	"FRAME1.SF4"
+	SEGMENT	'bank8ROM'
+HORSE2	#LOAD	"FRAME2.SF4"
+	SEGMENT	'bank9ROM'
+HORSE3	#LOAD	"FRAME3.SF4"
+	SEGMENT	'bankAROM'
+HORSE4	#LOAD	"FRAME4.SF4"
+	SEGMENT	'bankBROM'
+HORSE5	#LOAD	"FRAME5.SF4"
+	SEGMENT	'bankCROM'
+HORSE0	#LOAD	"FRAME0.SF4"	; standing still frames
+	SEGMENT	'bankDROM'
+
+START_H	#LOAD	"ANIM.PAK"	; horse chars
+START_HS	#LOAD	"FIRSTFR.PAK"	; horse map
+
+	SEGMENT	'bankEROM'
+
+ANIM2	#LOAD	"PART02"
+ANIM3	#LOAD	"PART03"
+ANIM4	#LOAD	"PART04"
+ANIM5	#LOAD	"PART05"
+ANIM6	#LOAD	"PART06"
+ANIM7	#LOAD	"PART07"
+ANIM8	#LOAD	"PART08"
+ANIM9	#LOAD	"PART09"
+ANIM10	#LOAD	"PART10"
+ANIM11	#LOAD	"PART11"
+ANIM12	#LOAD	"PART12"
+ANIM13	#LOAD	"PART13"
+ANIM14	#LOAD	"PART14"
+ANIM15	#LOAD	"PART15"
+ANIM16	#LOAD	"PART16"
+ANIM17	#LOAD	"PART17"
+	SEGMENT	'bankFROM'
+ANIM18	#LOAD	"PART18"
+ANIM19	#LOAD	"PART19"
+ANIM20	#LOAD	"PART20"
+ANIM21	#LOAD	"PART21"
+ANIM22	#LOAD	"PART22"
+ANIM23	#LOAD	"PART23"
+ANIM24	#LOAD	"PART24"
+ANIM25	#LOAD	"PART25"
+ANIM26	#LOAD	"PART26"
+
+	SEGMENT	'bank10ROM'
+	SEGMENT	'bank11ROM'
+	SEGMENT	'bank12ROM'
+	SEGMENT	'bank13ROM'
+	
+
+	END

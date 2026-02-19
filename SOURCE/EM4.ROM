@@ -1,0 +1,94 @@
+;The format of these entries is the name of the chip, the name of the
+;runtime CCC file, the number of bytes in the EPROM expressed in hex,
+;the width of the data bus of the device (8 or 16), the number of pins on
+;the body of the chip (24,28,32,40 or 42), the active level of the CE pin,
+;and the active level of the OE pin.
+;
+;the following are standard 8-bit EPROMs and ROMs
+;
+2716,e4run,800,8,24,0,0
+2732,e4run,1000,8,24,0,0
+2764,e4run,2000,8,28,0,0
+27128,e4run,4000,8,28,0,0
+27256,e4run,8000,8,28,0,0
+27512,e4run,10000,8,28,0,0
+27C16,e4run,800,8,24,0,0
+27C32,e4run,1000,8,24,0,0
+27C64,e4run,2000,8,28,0,0
+27C128,e4run,4000,8,28,0,0
+27C256,e4run,8000,8,28,0,0
+LH53259,e4run,8000,8,28,0,0	;active-lo OE Option
+LH53259HIOE,e4run,8000,8,28,0,1	;active-hi OE Option
+27C512,e4run,10000,8,28,0,0
+LH53514,e4run,10000,8,28,0,0	;active-lo OE option 
+LH53514HIOE,e4run,10000,8,28,0,1	;active-hi OE option
+27C101,e4run,20000,8,32,0,0
+LH571001,e4run,20000,8,32,0,0
+LH530800,e4run,8000,8,32,0,0	;active-LO CE/OE option
+LH530800HICE,e4run,8000,8,32,1,0	;active-hi CE option
+LH530800HIOE,e4run,8000,8,32,0,1	;active-hi OE option
+LH530800HICEOE,e4run,8000,8,32,1,1	;active-hi CE/OE option
+27C201,e4run,40000,8,32,0,0
+27C401,e4run,80000,8,32,0,0
+4Msnes,e4run,80000,8,32,1,0	; active high CE to avoid adding inverter to eprom cart
+27C801,e4run,100000,8,32,0,0
+HN62308B,e4run,100000,8,32,0,0
+HN62318B,e4run,100000,8,32,0,0
+8Msnes,e4run,100000,8,32,1,0	; active high CE to avoid adding inverter to eprom cart
+16Mbit,e4run,200000,8,32,0,0
+16Msnes,e4run,200000,8,32,1,0	; active high CE to avoid adding inverter to eprom cart
+;
+;the following are 8-bit EPROMs and ROMs used in 2x8 mode
+;
+2x2716,e4run16,1000,16,24,0,0
+2x2732,e4run16,2000,16,24,0,0
+2x2764,e4run16,4000,16,28,0,0
+2x27128,e4run16,8000,16,28,0,0
+2x27256,e4run16,10000,16,28,0,0
+2x27512,e4run16,20000,16,28,0,0
+2x27C16,e4run16,1000,16,24,0,0
+2x27C32,e4run16,2000,16,24,0,0
+2x27C64,e4run16,4000,16,28,0,0
+2x27C128,e4run16,8000,16,28,0,0
+2x27C256,e4run16,10000,16,28,0,0
+2xLH53259,e4run16,10000,16,28,0,0	;active-hi OE option not supported yet
+2x27C512,e4run16,20000,16,28,0,0
+2xLH53514,e4run16,20000,16,28,0,0	;active-hi OE option not supported yet
+2x27C101,e4run16,40000,16,32,0,0
+2xLH571001,e4run16,40000,16,32,0,0
+2xLH530800,e4run16,10000,16,32,0,0	;active-hi CE/OE option not supported yet
+2x27C201,e4run16,80000,16,32,0,0
+2x27C401,e4run16,100000,16,32,0,0
+2x27C801,e4run16,200000,16,32,0,0
+2xHN62308B,e4run16,200000,16,32,0,0
+2xHN62318B,e4run16,200000,16,32,0,0
+;
+;the following are 40-pin EPROMs and ROMs
+;
+HN27C1024,e4run40,20000,16,40,0,0
+HN27C4096,e4run40,80000,16,40,0,0
+M5M27C102,e4run40,20000,16,40,0,0
+M5M27C202,e4run40,40000,16,40,0,0
+M5M27C402,e4run40,80000,16,40,0,0
+HN62442,e4run40,40000,16,40,0,0
+HN62444,e4run40,80000,16,40,0,0
+;
+;the following are 40/42-pin ROMs, up to and incl. 4M can use
+;just the low 40-pins of the 42-pin header cable
+;
+HN624016,e4run42,200000,16,42,0,0
+HN624017,e4run42,200000,16,42,0,0
+HN62418,e4run42,100000,16,42,0,0
+HN62408,e4run42,100000,16,42,0,0
+HN62412,e4run42,40000,16,42,0,0	;can use low 40 of 42-pin cable
+HN62422,e4run42,40000,16,42,0,0	;can use low 40 of 42-pin cable
+HN62414,e4run42,80000,16,42,0,0	;can use low 40 of 42-pin cable
+HN62434,e4run42,80000,16,42,0,0	;can use low 40 of 42-pin cable
+MH25616RNA,e4run42,80000,16,42,0,0
+LH5316000,e4run42,200000,16,42,0,0
+LH538000,e4run42,100000,16,42,0,0
+;
+;
+;
+;
+;

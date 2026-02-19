@@ -1,0 +1,150 @@
+
+;**+	Set Overview Screen Stuff
+SET_OVER	PHP
+	ShortA_LongI
+	STZ	<NMI_JUMP
+	STZ	|HDMAEN
+
+	LDA	#1
+	STA	|BG12NBA	; chars start @ $1000
+	LDA	#3
+	STA	|BGMODE
+	LDA	#1+{$0800/$100}	; screen @ $7800 two wide
+	STA	|BG1SC
+	LDA	#1	; ENABLE ONLY BG1
+	STA	|TM
+	STZ	|TMW	;STA	|TMW
+	STZ	|TS
+	STZ	|TSW
+	STZ	|W12SEL
+
+	LDX	#OFFSET OVER_MAP	; packed map start
+	LDA	#SEG OVER_MAP
+	JSR	|UNPACK_DATA	; to RAM
+	LongAI
+	LDA	#$0800
+	STA	|VMADDL	; BG1 screen @ 0
+	LDX	#0
+	TXY
+copy	LDA	>UNPACK_BUFFER,X
+	STA	|VMDATAL	; clearn it out
+	INX
+	INX
+	INY
+	CPY	#32	; end of lenght of BG size
+	BNE	ma
+	LDY	#0
+	TXA
+	CLC
+	ADC	#32	; skip other bit
+	TAX
+ma	CPX	#3200	; 4096 total size
+	BNE	copy	; do all
+	LDA	#$0C00	; other screen of BG1
+	STA	|VMADDL	; BG1 screen @ $400 (abs @$800)
+	LDX	#32 mult 2	; real index words
+	LDY	#32	; start pos in map @ 32
+copy1	LDA	>UNPACK_BUFFER,X
+	STA	|VMDATAL	; clearn it out
+	INX
+	INX
+	INY
+	CPY	#48	; to end of line
+	BNE	ma1
+clear_end	STZ	|VMDATAL
+	INY
+	CPY	#64
+	BNE	clear_end
+	LDY	#32	; reinit read
+	TXA
+	CLC
+	ADC	#64	; next line
+	TAX
+ma1	CPX	#3200+64	; 4096 total size
+	BNE	copy1	; do all
+
+	LongA_ShortI
+	LDA	#$1000
+	STA	|VMADDL	; vram start write
+	LDA	#$8000	; transfer first part
+	STA	|DMA_COUNT+DMA7
+	LDA	#OFFSET OVER_CHARSET1
+	STA	|DMA_A1ADDR+DMA7	; start address for read
+	LDX	#SEG OVER_CHARSET1	; bank 1 for character set
+	STX	|DMA_A1ADDRB+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN	; set channel 7 going?
+	LDA	#$51C0	; rest of BIG set
+	STA	|DMA_COUNT+DMA7
+	LDA	#OFFSET OVER_CHARSET2
+	STA	|DMA_A1ADDR+DMA7	; start address for read
+	LDX	#SEG OVER_CHARSET2	; bank 1 for character set
+	STX	|DMA_A1ADDRB+DMA7
+	LDX	#BIT7
+	STX	|MDMAEN	; set channel 7 going?
+
+	LDX	#0
+	STX	|CGADD	; start of pallete colours
+	LDA	#512	; 16 palettes for 256 BG mode
+	STA	|DMA_COUNT+DMA6
+	LDA	#OFFSET OVER_PALETTE
+	STA	|DMA_A1ADDR+DMA6
+	LDX	#SEG OVER_PALETTE
+	STX	|DMA_A1ADDRB+DMA6
+	LDX	#BIT6
+	STX	|MDMAEN
+
+	LDX	#OVER_NMI
+	STX	<NMI_JUMP	; jump in NMI
+	PLP
+	RTS
+
+;**+	OverView Map Processes
+
+	AssertM16X16
+OVER_SPEED	EQU	1	; pixels movement
+
+OMAX_X	EQU	15 MULT 8
+OMAX_Y	EQU	2 MULT 8
+	; Short OverView Map then Return!
+SHOW_OVERVIEW	JSR	|FADE_OUT
+	JSR	|SET_OVER	; OVER STUFF
+	JSR	|FADE_IN
+OVER_LOOP	LDX	#$0000
+	TXY
+	LDA	<JOY_PAD1
+	BIT	#Joy_Right	; right?
+	BEQ	no_right
+	LDX	#OVER_SPEED
+no_right	BIT	#Joy_Left	; left?
+	BEQ	no_left
+	LDX	#-OVER_SPEED
+no_left	BIT	#Joy_Down	; down?
+	BEQ	no_down
+	LDY	#OVER_SPEED
+no_down	BIT	#Joy_Up	; up?
+	BEQ	no_up
+	LDY	#-OVER_SPEED
+no_up	TXA
+	CLC
+	ADC	<OVERVIEW_X
+	BMI	no_savex1	; dont store if < 0
+	CMP	#OMAX_X	; chars x
+	BCS	no_savex1
+	STA	<OVERVIEW_X
+no_savex1	TYA
+	CLC
+	ADC	<OVERVIEW_Y
+	BMI	NO_SCR	; < 0
+	CMP	#OMAX_Y	; max y
+	BCS	NO_SCR
+	STA	<OVERVIEW_Y
+NO_SCR	LDA	<JOY_PAD1
+	BIT	#Joy_Start
+	BEQ	NOGET
+	JSR	|FADE_OUT	; dont want to see
+	JSR	|RE_INIT_GAME	; reinit VRAM and bits
+	JMP	|FADE_IN	; back to where was
+
+NOGET	JSR	|FIFTY
+	JMP	|OVER_LOOP

@@ -1,0 +1,18 @@
+E4 Monitor for Z80 Micro
+When allowing Background Interrupts while in Shadow Monitor, note that the
+interrupts cannot execute code in the range 0000-07ff, and similarly DMA
+started before entry to the Shadow Monitor will not read correct addresses
+from the 0000-07ff address range.  The exception to this is the interrupt
+vectors themselves, when enabled, ie addresses 0038-003F if RST7 used.  If
+NMI is enabled, ranges 0066-00FF and 0800-FFFF may be accessed by the NMI
+routine.
+
+nmi	66	ff
+rst0	0	7
+rst1	8	f
+rst2	10	17
+rst3	18	1f
+rst4	20	27
+rst5	28	2f
+rst6	30	37
+rst7	38	3f

@@ -1,0 +1,247 @@
+
+Segment List
+------------
+
+C:\SOURCE\GAME[5]  192- 2683    808000 -   80C991                 'bank0ROM'  
+C:\SOURCE\GAME[8] 2685- 2697    80FF80 -   80FF8F                 'vjdata'  
+C:\SOURCE\GAME[7] 2685- 2697      FF80 -     FF8F                 'vecjmps'  
+C:\SOURCE\GAME[10] 2697- 2718    80FFE4 -   80FFFF                 'vecdata'  
+C:\SOURCE\GAME[9] 2697- 2718      FFE4 -     FFFF                 'vectors'  
+C:\SOURCE\GAME[11] 2718- 2738    818000 -   81CE30                 'bank1ROM'  
+C:\SOURCE\GAME[12] 2738- 2752    828000 -   82FBFD                 'bank2ROM'  
+C:\SOURCE\GAME[13] 2752- 2755    838000 -   83FFFF                 'bank3ROM'  
+C:\SOURCE\GAME[14] 2755- 2758    848000 -   84FDED                 'bank4ROM'  
+C:\SOURCE\GAME[15] 2758- 2763    858000 -   85E3BB                 'bank5ROM'  
+C:\SOURCE\GAME[16] 2763- 2767    868000 -   86BA4D                 'bank6ROM'  
+C:\SOURCE\GAME[17] 2767- 2769    878000 -   87AFFF                 'bank7ROM'  
+C:\SOURCE\GAME[18] 2769- 2771    888000 -   88AFFF                 'bank8ROM'  
+C:\SOURCE\GAME[19] 2771- 2773    898000 -   89AFFF                 'bank9ROM'  
+C:\SOURCE\GAME[20] 2773- 2775    8A8000 -   8AAFFF                 'bankAROM'  
+C:\SOURCE\GAME[21] 2775- 2777    8B8000 -   8BAFFF                 'bankBROM'  
+C:\SOURCE\GAME[22] 2777- 2779    8C8000 -   8CAFFF                 'bankCROM'  
+C:\SOURCE\GAME[23] 2779- 2784    8D8000 -   8D8E8F                 'bankDROM'  
+C:\SOURCE\GAME[24] 2784- 2802    8E8000 -   8EFB5F                 'bankEROM'  
+C:\SOURCE\GAME[25] 2802- 2813    8F8000 -   8FDADF                 'bankFROM'  
+C:\SOURCE\GAME[1]   11-  148         0 -       AD                 'banklowRAM'  
+C:\SOURCE\GAME[2]  148-  176       200 -     131F                 'bankcommon'  
+C:\SOURCE\GAME[3]  176-  182    7E2000 -   7E3FFF                 'bank7ERAM'  
+C:\SOURCE\GAME[4]  182-  192    7F0000 -   7FDFFF                 'bank7FRAM'  
+
+
+Class List
+----------
+
+0 '    bank0ROM'   byte from   808000 to   80C991 (lim   80FF7F) = 57% CS
+0 ' backchannel'   para from   80FF10 to   80FF0F (lim   80FF1F) =  0% V
+0 '      vjdata'   byte from   80FF80 to   80FF8F (lim   80FFDF) = 15% C
+0 '     vecjmps'   byte from     FF80 to     FF8F (lim     FFDF) = 15% D
+0 '     vecdata'   byte from   80FFE4 to   80FFFF (lim   80FFFF) =100% S
+0 '     vectors'   byte from     FFE4 to     FFFF (lim     FFFF) =100% D
+0 '    bank1ROM'   byte from   818000 to   81CE30 (lim   81FFFF) = 61% S
+0 '    bank2ROM'   byte from   828000 to   82FBFD (lim   82FFFF) = 96% S
+0 '    bank3ROM'   byte from   838000 to   83FFFF (lim   83FFFF) =100% S
+0 '    bank4ROM'   byte from   848000 to   84FDED (lim   84FFFF) = 98% S
+0 '    bank5ROM'   byte from   858000 to   85E3BB (lim   85FFFF) = 77% S
+0 '    bank6ROM'   byte from   868000 to   86BA4D (lim   86FFFF) = 45% S
+0 '    bank7ROM'   byte from   878000 to   87AFFF (lim   87FFFF) = 37% S
+0 '    bank8ROM'   byte from   888000 to   88AFFF (lim   88FFFF) = 37% S
+0 '    bank9ROM'   byte from   898000 to   89AFFF (lim   89FFFF) = 37% S
+0 '    bankAROM'   byte from   8A8000 to   8AAFFF (lim   8AFFFF) = 37% S
+0 '    bankBROM'   byte from   8B8000 to   8BAFFF (lim   8BFFFF) = 37% S
+0 '    bankCROM'   byte from   8C8000 to   8CAFFF (lim   8CFFFF) = 37% S
+0 '    bankDROM'   byte from   8D8000 to   8D8E8F (lim   8DFFFF) = 11% S
+0 '    bankEROM'   byte from   8E8000 to   8EFB5F (lim   8EFFFF) = 96% S
+0 '    bankFROM'   byte from   8F8000 to   8FDADF (lim   8FFFFF) = 70% S
+0 '   bank10ROM'   byte from   908000 to   907FFF (lim   90FFFF) =  0% V
+0 '   bank11ROM'   byte from   918000 to   917FFF (lim   91FFFF) =  0% V
+0 '   bank12ROM'   byte from   928000 to   927FFF (lim   92FFFF) =  0% V
+0 '   bank13ROM'   byte from   938000 to   937FFF (lim   93FFFF) =  0% V
+0 '  banklowRAM'   byte from        0 to       AD (lim     1FFF) =  2% D
+0 '  bankcommon'   byte from      200 to     131F (lim     1FFF) = 57% D
+0 '   bank7ERAM'   byte from   7E2000 to   7E3FFF (lim   7EFFFF) = 14% D
+0 '   bank7FRAM'   byte from   7F0000 to   7FDFFF (lim   7FFFFF) = 87% D
+
+
+
+External Label list
+-------------------
+
+Symbol Name                       Value     Scope  Def(line)
+
+ACTION_SPEED                      0000001C  LONG  C:\SOURCE\GAME.ASM(34)
+ANIMATE_SPEED                     00000024  LONG  C:\SOURCE\GAME.ASM(38)
+ATEMP                             00000092  LONG  C:\SOURCE\GAME.ASM(122)
+
+BULLET_BASE                       0000005C  LONG  C:\SOURCE\GAME.ASM(78)
+BLANK                                   6C  BYTE  C:\SOURCE\GAME.ASM(5)
+BULLET_FRAME                      00000050  LONG  C:\SOURCE\GAME.ASM(71)
+BULLET_THERE                      00000060  LONG  C:\SOURCE\GAME.ASM(80)
+BULLET_XDIFF                      00000052  LONG  C:\SOURCE\GAME.ASM(73)
+BULLET_YDIFF                      00000054  LONG  C:\SOURCE\GAME.ASM(74)
+BULLET_XDIR                       00000058  LONG  C:\SOURCE\GAME.ASM(76)
+BULLET_YDIR                       0000005A  LONG  C:\SOURCE\GAME.ASM(77)
+BULLET_DIST                       0000005E  LONG  C:\SOURCE\GAME.ASM(79)
+BULLET_COUNT                      00000056  LONG  C:\SOURCE\GAME.ASM(75)
+BOUNCE_AMOUNT                     00000036  LONG  C:\SOURCE\GAME.ASM(51)
+
+COMMON_BANK                       00000200  LONG  C:\SOURCE\GAME.ASM(149)
+COLLIDE_TOP                       0000009C  LONG  C:\SOURCE\GAME.ASM(128)
+CROSS_HAIR                        0000003E  LONG  C:\SOURCE\GAME.ASM(60)
+COLLIDE_BOT                       0000009E  LONG  C:\SOURCE\GAME.ASM(129)
+COLLIDE_LEFT                      00000098  LONG  C:\SOURCE\GAME.ASM(126)
+COLLIDE_RIGHT                     0000009A  LONG  C:\SOURCE\GAME.ASM(127)
+
+DOG                               00000000  LONG  C:\SOURCE\GAME.ASM(15)
+DUCK_SPEED                        00000048  LONG  C:\SOURCE\GAME.ASM(67)
+DUCK_DIR                          0000004E  LONG  C:\SOURCE\GAME.ASM(70)
+DUCK_NUMBER                       0000004A  LONG  C:\SOURCE\GAME.ASM(68)
+DUCK_BUFFER                       0000004C  LONG  C:\SOURCE\GAME.ASM(69)
+DEBUG0                            00000001  LONG  C:\SOURCE\GAME.ASM(17)
+DEBUG1                            00000003  LONG  C:\SOURCE\GAME.ASM(18)
+DEBUG2                            00000005  LONG  C:\SOURCE\GAME.ASM(19)
+DEBUG3                            00000007  LONG  C:\SOURCE\GAME.ASM(20)
+DEBUG4                            00000009  LONG  C:\SOURCE\GAME.ASM(21)
+DEBUG5                            0000000B  LONG  C:\SOURCE\GAME.ASM(22)
+
+FADE                              00000011  LONG  C:\SOURCE\GAME.ASM(27)
+FIRST_BANK                        00808000  LONG  C:\SOURCE\GAME.ASM(193)
+FRAME_INDEX                       00000022  LONG  C:\SOURCE\GAME.ASM(37)
+
+HDMA_DATA                         00000200  LONG  C:\SOURCE\GAME.ASM(150)
+HORSE_BANK                        00000034  LONG  C:\SOURCE\GAME.ASM(49)
+HORSE_TURN                        00000028  LONG  C:\SOURCE\GAME.ASM(41)
+HORSE_DIRECTION                   0000002A  LONG  C:\SOURCE\GAME.ASM(42)
+HORSE_SPRITES                     00000032  LONG  C:\SOURCE\GAME.ASM(48)
+
+JOY_PAD1                          00000012  LONG  C:\SOURCE\GAME.ASM(28)
+JOY_PAD2                          00000014  LONG  C:\SOURCE\GAME.ASM(29)
+
+LETTERS                                 00  BYTE  C:\SOURCE\GAME.ASM(4)
+LAST_DIRECTION                    0000003A  LONG  C:\SOURCE\GAME.ASM(55)
+LINE_BUFFER                       00000240  LONG  C:\SOURCE\GAME.ASM(153)
+LAST_X                            00000066  LONG  C:\SOURCE\GAME.ASM(87)
+LAST_XPLOT                        0000006E  LONG  C:\SOURCE\GAME.ASM(93)
+LAST_YPLOT                        00000070  LONG  C:\SOURCE\GAME.ASM(94)
+LASY_Y                            00000068  LONG  C:\SOURCE\GAME.ASM(88)
+LAST_JOY                          00000016  LONG  C:\SOURCE\GAME.ASM(30)
+
+MIKE1                             00000084  LONG  C:\SOURCE\GAME.ASM(115)
+MIKE2                             00000088  LONG  C:\SOURCE\GAME.ASM(117)
+MATRIX_A                          000000A0  LONG  C:\SOURCE\GAME.ASM(132)
+MATRIX_B                          000000A2  LONG  C:\SOURCE\GAME.ASM(133)
+MATRIX_C                          000000A4  LONG  C:\SOURCE\GAME.ASM(134)
+MATRIX_D                          000000A6  LONG  C:\SOURCE\GAME.ASM(135)
+MAN_HORSE                         0000003C  LONG  C:\SOURCE\GAME.ASM(57)
+MUSIC_MODE                        00000044  LONG  C:\SOURCE\GAME.ASM(64)
+MAN_BANK                          00000030  LONG  C:\SOURCE\GAME.ASM(46)
+MIKE1_BANK                        00000086  LONG  C:\SOURCE\GAME.ASM(116)
+MADEUP_MAP                        007E2000  LONG  C:\SOURCE\GAME.ASM(179)
+MODE7_MAKEUP                      007F6000  LONG  C:\SOURCE\GAME.ASM(185)
+MAX_X                             00000040  LONG  C:\SOURCE\GAME.ASM(61)
+MAN_SPRITES                       0000002E  LONG  C:\SOURCE\GAME.ASM(45)
+MAX_Y                             00000042  LONG  C:\SOURCE\GAME.ASM(62)
+MUSIC_NUMBER                      00000046  LONG  C:\SOURCE\GAME.ASM(65)
+
+NMI_JUMP                          0000000F  LONG  C:\SOURCE\GAME.ASM(25)
+NUMBERS                                 70  BYTE  C:\SOURCE\GAME.ASM(7)
+
+OBJECT_DATA                       00000300  LONG  C:\SOURCE\GAME.ASM(156)
+OBJECT_SIZES                      00000500  LONG  C:\SOURCE\GAME.ASM(157)
+OVERVIEW_X                        0000006A  LONG  C:\SOURCE\GAME.ASM(90)
+OVERVIEW_Y                        0000006C  LONG  C:\SOURCE\GAME.ASM(91)
+
+PLAYER_FRAME                      00000020  LONG  C:\SOURCE\GAME.ASM(36)
+PLAYER_ACTION                     0000001A  LONG  C:\SOURCE\GAME.ASM(33)
+
+ROTATION                          000000AA  LONG  C:\SOURCE\GAME.ASM(137)
+ROT_TEMP                          000000AC  LONG  C:\SOURCE\GAME.ASM(138)
+
+SYNC                              00000010  LONG  C:\SOURCE\GAME.ASM(26)
+SPRITE_TYPE                       00000922  LONG  C:\SOURCE\GAME.ASM(168)
+SPRITE_FRAME                      00000920  LONG  C:\SOURCE\GAME.ASM(167)
+SUB_ACTION                        0000001E  LONG  C:\SOURCE\GAME.ASM(35)
+SELECTOR                                98  BYTE  C:\SOURCE\GAME.ASM(8)
+SPRITE_SET                        00000722  LONG  C:\SOURCE\GAME.ASM(164)
+SCROLL_YBUFFER                    00000280  LONG  C:\SOURCE\GAME.ASM(154)
+SCROLL_XBUFFER                    000002C0  LONG  C:\SOURCE\GAME.ASM(155)
+SPRITE_UNSET                      00000723  LONG  C:\SOURCE\GAME.ASM(165)
+SPRITE_ATTRIBS                    00000302  LONG  C:\SOURCE\GAME.ASM(158)
+SPRITE_OFFSET                     00000720  LONG  C:\SOURCE\GAME.ASM(163)
+SPRITE_WORLDX                     00000520  LONG  C:\SOURCE\GAME.ASM(160)
+SPRITE_WORLDY                     00000522  LONG  C:\SOURCE\GAME.ASM(161)
+
+TEMP1                             0000008A  LONG  C:\SOURCE\GAME.ASM(118)
+TEMP2                             0000008C  LONG  C:\SOURCE\GAME.ASM(119)
+TEMP3                             0000008E  LONG  C:\SOURCE\GAME.ASM(120)
+TEMP4                             00000090  LONG  C:\SOURCE\GAME.ASM(121)
+TEST_FADE                         00000018  LONG  C:\SOURCE\GAME.ASM(31)
+TURN_SPEED                        0000002C  LONG  C:\SOURCE\GAME.ASM(43)
+TEXT_SCREEN                       00000B20  LONG  C:\SOURCE\GAME.ASM(172)
+TURN_DIRECTION                    00000038  LONG  C:\SOURCE\GAME.ASM(54)
+
+USER_RAM1                         007F0000  LONG  C:\SOURCE\GAME.ASM(183)
+USER_RAM2                         007E2000  LONG  C:\SOURCE\GAME.ASM(178)
+UNDER_SCORE                             68  BYTE  C:\SOURCE\GAME.ASM(6)
+UNPACK_BUFFER                     007F0000  LONG  C:\SOURCE\GAME.ASM(184)
+
+VARIABLES                         00000000  LONG  C:\SOURCE\GAME.ASM(13)
+
+WALK_SPEED                        00000026  LONG  C:\SOURCE\GAME.ASM(39)
+WORLD_X                           00000062  LONG  C:\SOURCE\GAME.ASM(85)
+WORLD_Y                           00000064  LONG  C:\SOURCE\GAME.ASM(86)
+WINDOW_STARTX                     0000007C  LONG  C:\SOURCE\GAME.ASM(107)
+WINDOW_STARTY                     0000007D  LONG  C:\SOURCE\GAME.ASM(108)
+
+XSCROLL1                          00000062  LONG  C:\SOURCE\GAME.ASM(83)
+X_SCALE                           000000A8  LONG  C:\SOURCE\GAME.ASM(136)
+XTEMP                             00000094  LONG  C:\SOURCE\GAME.ASM(123)
+XPLOT_MEM                         00000074  LONG  C:\SOURCE\GAME.ASM(96)
+XPLOT_ACT                         00000076  LONG  C:\SOURCE\GAME.ASM(97)
+
+YSCROLL1                          00000064  LONG  C:\SOURCE\GAME.ASM(84)
+YTEMP                             00000096  LONG  C:\SOURCE\GAME.ASM(124)
+YPLOT_MEM                         00000072  LONG  C:\SOURCE\GAME.ASM(95)
+YPLOT_ACT                         00000078  LONG  C:\SOURCE\GAME.ASM(98)
+
+ZOOM_TYPE                         0000007B  LONG  C:\SOURCE\GAME.ASM(104)
+ZOOM_SIZE                         0000007E  LONG  C:\SOURCE\GAME.ASM(109)
+ZOOM_TEMP                         0000007F  LONG  C:\SOURCE\GAME.ASM(110)
+ZAP_OUT                           0000000D  LONG  C:\SOURCE\GAME.ASM(24)
+ZOOM_DIRECTION                    0000007A  LONG  C:\SOURCE\GAME.ASM(101)
+ZOOM_NUMBER                       00000082  LONG  C:\SOURCE\GAME.ASM(112)
+ZOOM_DELAY                        00000080  LONG  C:\SOURCE\GAME.ASM(111)
+
+_BackChannel                      00808000  LONG  C:\SOURCE\GAME.ASM(5)
+
+
+123 labels
+
+
+[Locator Adjustments]
+
+
+'bank0ROM'              (0) 00808000 - 0080C992  =  (0) 00808000 - 0080C992
+'backchannel'           (0) 0080FF10 - 0080FF10  =  (0) 0080FF10 - 0080FF10
+'vjdata'                (0) 0080FF80 - 0080FF90  =  (0) 0080FF80 - 0080FF90
+'vecdata'               (0) 0080FFE4 - 00810000  =  (0) 0080FFE4 - 00810000
+'bank1ROM'              (0) 00818000 - 0081CE31  =  (0) 00810000 - 00814E31
+'bank2ROM'              (0) 00828000 - 0082FBFE  =  (0) 00818000 - 0081FBFE
+'bank3ROM'              (0) 00838000 - 00840000  =  (0) 00820000 - 00828000
+'bank4ROM'              (0) 00848000 - 0084FDEE  =  (0) 00828000 - 0082FDEE
+'bank5ROM'              (0) 00858000 - 0085E3BC  =  (0) 00830000 - 008363BC
+'bank6ROM'              (0) 00868000 - 0086BA4E  =  (0) 00838000 - 0083BA4E
+'bank7ROM'              (0) 00878000 - 0087B000  =  (0) 00840000 - 00843000
+'bank8ROM'              (0) 00888000 - 0088B000  =  (0) 00848000 - 0084B000
+'bank9ROM'              (0) 00898000 - 0089B000  =  (0) 00850000 - 00853000
+'bankAROM'              (0) 008A8000 - 008AB000  =  (0) 00858000 - 0085B000
+'bankBROM'              (0) 008B8000 - 008BB000  =  (0) 00860000 - 00863000
+'bankCROM'              (0) 008C8000 - 008CB000  =  (0) 00868000 - 0086B000
+'bankDROM'              (0) 008D8000 - 008D8E90  =  (0) 00870000 - 00870E90
+'bankEROM'              (0) 008E8000 - 008EFB60  =  (0) 00878000 - 0087FB60
+'bankFROM'              (0) 008F8000 - 008FDAE0  =  (0) 00880000 - 00885AE0
+'bank10ROM'             (0) 00908000 - 00908000  =  (0) 00888000 - 00888000
+'bank11ROM'             (0) 00918000 - 00918000  =  (0) 00890000 - 00890000
+'bank12ROM'             (0) 00928000 - 00928000  =  (0) 00898000 - 00898000
+'bank13ROM'             (0) 00938000 - 00938000  =  (0) 008A0000 - 008A0000
+
+

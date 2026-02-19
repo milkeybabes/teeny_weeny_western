@@ -1,0 +1,4 @@
+Em4 CPU file for 65C816, by Hybrid                   USES HARDCALL
+
+int	ffe6 ffe7
+
