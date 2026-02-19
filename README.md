@@ -74,5 +74,46 @@ GAME_MAP - This was not originally provided (of course), but I generated the fil
   - 3584 x 1840 pixels would have been big on a SNES. It's not perfect, but it gives you an idea of what it would have looked like live.
   - There were to be some priority elements where you could walk behind buildings and trees, not implemented, of course.
 
+## 🛠 Building
 
+This project preserves its original assembly structure.
+
+To build:
+
+1. I recommend using DOSBox.com software; you could use a DOS VM if you are hardcore.
+2. You need at least the BIN and SOURCE folder contents to assemble the binary.
+3. Best to set the path as. PATH = %PATH%;C:\BIN  (this is the CRASH Barrier Binary .EXE files)
+3. Goto the SOURCE folder. and run from the command line
+	>METAMAKE GAME
+
+	>OBSEND GAME,F,SNES-ROM.SMC,,
+ 
+The build system has not been modernised intentionally. The Metamake will generate a .COD file, which you need, and then the OBSEND command is generated into the expanded raw ROM, ie a filled-out binary SNES rom format.
+
+## ⚠ Preservation Notice
+
+This codebase is presented as a historical archive.
+
+- The code has not been refactored.
+- Structural decisions reflect early 1990s hardware constraints.
+- Unfinished systems remain as originally implemented.
+- No gameplay or architectural revisions have been made.
+
+The intent is preservation, not revision.
+
+---
+
+## 📄 Licensing & Rights
+
+If you are a rights holder associated tool .exe with this project and wish to discuss its presence here, please open an issue.
+
+This repository is shared in good faith as an archive of historical development.
+
+---
+
+## 🧾 Acknowledgement
+
+This archive exists thanks to the recovery of original source materials and development assets after several decades.
+
+It is preserved to document a small piece of early SNES development history.
 
