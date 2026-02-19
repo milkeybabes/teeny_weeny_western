@@ -1,0 +1,4 @@
+% Makefile to assemble 	resource OBJs
+
+segments.obj:	segments.asm
+		as segments;

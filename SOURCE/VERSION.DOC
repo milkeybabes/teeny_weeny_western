@@ -1,0 +1,151 @@
+[BUILD]   LYN  : 182                                                                                                          ULYN  136                                                                              
+
+   29:  Mon 08 Feb 1993  14:04:56 :
+Linker was not doing LOC adjustments to extended COD block headers; also
+some record_code() calls were not qualified by if(cystar)... and the
+resultant file ops on unopened files led to NULL POINTER errors at end of
+link - belived benign.
+
+[BUILD]   LYN  : 183                                                                                                          ULYN  136                                                                              
+
+   30:  Wed 17 Feb 1993  10:27:31 :
+Minor bug with LOC handling COd file translation found by Colin at NMS.
+Caused fake 'cannot straddle LOC boundary' errors when LOC changed COD.
+[BUILD]   LYN  : 186                                                                                                          ULYN  136                                                                              
+
+   31:  Tue 02 Mar 1993  16:01:36 :
+Linker was placing naive source file string from start of OBJ module into
+MAP file in segments list.  SLD functions actually require a path to the
+OBJ itself.  Tony at Hybrid found this when using AS -o= switch with new
+debugger.  Tested on Z with current debugger.
+
+[BUILD]   LYN  : 188                                                                                                          ULYN  136                                                                              
+
+   32:  Sat 13 Mar 1993  15:32:25 :
+Amended LYN to delete DBI files from CWD only, not from OBJ path, which may
+be different with -o= in the Assembler
+[BUILD]   LYN  : 195                                                                                                          ULYN  136                                                                              
+
+   33:  Fri 26 Mar 1993  10:31:15 :
+Allow use of > or < in copied code segment class entries
+[BUILD]   LYN  : 202                                                                                                          ULYN  136                                                                              
+
+   34:  Sun 18 Apr 1993  01:09:49 :
+Modded TOK_SEGMENT in OBJ to take upper nybble of .codfile as length b16..b19,
+made .ssize in SEGMENT unsigned long, altered final output routine to chop
+output into 48K-sized blocks if exceeds 48K, and modded #load routine in the
+same way.  Result is single segment may be up to 1Mbyte, from 64K.
+[BUILD]   LYN  : 203                                                                                                          ULYN  136                                                                              
+
+   35:  Tue 20 Apr 1993  18:17:42 :
+mods to speed up broke o[] array resetting - obj > 4 bytes are corrupt.
+Fixed.
+[BUILD]   LYN  : 205                                                                                                          ULYN  136                                                                              
+
+   36:  Thu 06 May 1993  12:23:48 :
+Nasty bug from class redirection operators < and > - segment following
+last redirected one inherited destination org from previous segment.
+Fixed.
+
+[BUILD]   AS  : 1118 
+
+  154:  Wed 20 Jan 1993  15:11:05 :
+Colin at NMS reported that fwd refs to label equ's to *-(rel 0) give rel 0
+as the result.  Verified and fixed.
+[BUILD]   AS  : 1134 
+
+  155:  Wed 24 Feb 1993  16:29:27 :
+Motorola-style radix suffered from change of precedence of *.  Disallowed
+as multiply when in Motorola style.
+
+[BUILD]   AS  : 1144 
+
+  156:  Thu 04 Mar 1993  15:23:06 :
+Subtraction code in the Assembler checked if two args were relative, but
+failed to ensure they were relative to the same base address.  Fixed and
+tested on T.ASM.  Bug pointed out by Tony at Hybrid after adding Segment
+caused failures in data tables produced from cross-segment subtractions.
+
+[BUILD]   AS  : 1152 
+
+  157:  Sat 20 Mar 1993  13:17:00 :
+Implemented transient labels - if definition begins with '@' then scope
+lasts only until next normal label definition.  String symbols and macro
+calls by themseleves do not cause end of scope.
+
+[BUILD]   AS  : 1173 
+
+  158:  Sat 20 Mar 1993  15:31:32 :
+Added Pseudo-op for getting named file size into a label FILESIZE - takes
+filename in double-quotes as its argument.
+
+  159:  Sat 20 Mar 1993  15:32:15 :
+Added facility for giving an ellipsis (...) at the end of a macro's formal
+parameter list.  If given, strings passed in the normal way after any
+other formal paramters are fed into _arg1.._argn.  _arg0 holds the number
+of parameters passed, from 1 upward.  The _argX parameters follow exactly
+the same scope rules as ther normal parameters.
+
+  160:  Sat 20 Mar 1993  15:35:25 :
+Added capability for dereferencing numeric labels, if preceded by an &, eg
+label&num, where num is a numeric label, will give label5 if num==5.  If
+the numeric label's name is coming from a string symbol, give an extra &
+to get the extra dereferencing.  Example: string symbol 'str'=='num', and
+numeric symbol num==5.  label&str gives 'labelnum' and label&&str gives
+'label5'.  If 'label' itself is a string symbol, it will use up the first &
+during its own dereferencing, so add an extra & in that case.
+
+
+[BUILD]   AS  : 1201 
+
+  161:  Tue 23 Mar 1993  00:13:09 :
+Changed Source-grabbing code to cache in (currently) 16K units.  On an
+uncached hard drive, this improved performance on Ade's test file from
+70 ticks to 55, where the reference assembler (6.01) was 52 ticks.  The
+lowest level dos file IO routines are used, so expect improvements in
+all situations showing slowdown.
+
+[BUILD]   AS  : 1209 
+
+  162:  Fri 26 Mar 1993  10:30:26 :
+Allow use of > or < in copied code segment class entries
+[BUILD]   AS  : 1229 
+
+  163:  Tue 13 Apr 1993  00:00:54 :
+Fixed minor bug in transient label code - required dummy label at end of
+source to close transient scope.  Fixed.
+[BUILD]   AS  : 1265 
+
+  164:  Wed 14 Apr 1993  11:58:53 :
+Tidied up comments in listing - were ragged.
+[BUILD]   AS  : 1267 
+
+  165:  Sun 18 Apr 1993  01:12:22 :
+Modified SEGMENT struct to have long .ssize, and jank() in metas.c to stash
+b16..b19 of the .ssize in the .codfile b4..b7.  Means that a single segment
+may have up to 1Mbyte in it, not 64K as before.
+
+
+[BUILD]   AS  : 1272 
+
+  166:  Tue 20 Apr 1993  16:53:42 :
+during speed-up mods to mets.c, missed out array->pointer conversion in
+type 6 segment operation; caused massive failure on 80286 code (error 54s)
+Fixed.
+[BUILD]   AS  : 1287 
+
+  167:  Thu 13 May 1993  10:19:19 :
+Because of lyn[32] mods changing format of Mapfile Segment list slightly,
+accompanying mods in the assembler caused permanent failure to match any
+segments when doing final listing.  Reported by Simon Williams in France
+Fixed and verified.
+
+[BUILD]   AS  : 1290 
+
+  168:  Fri 14 May 1993  15:50:54 :
+Problem with transient label tracking - one extra entry at end of tracking
+table was being closed off each time.  When going from section with more
+active transients to less active ones, the (less active count+1)th entry
+in the previous more active list was being given the later closure line!
+Spotted by Bob at Probe, fixed and tested on his code.
+
