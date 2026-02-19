@@ -1,0 +1,9 @@
+Connect Em4 HARDBREAK line to -NMI pin on SAB80C166
+
+reset	0	7
+nmitrap	8	f
+stotrap	10	17
+stutrap	18	1f
+btrap	28	2f
+swtraps	40	1ff
+

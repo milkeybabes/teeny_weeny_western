@@ -1,0 +1,364 @@
+CRISP2 Online help
+==================
+
+Press ALT-F to make
+this window fill
+up the screen.
+
+  Press ALT-C to close this window
+
+  Press ALT-X to quit CRISP2
+
+  Press cursor keys to see more of this file.
+
+The use of a mouse is essential to the execution of this
+program. Keyboard controls can be used as shortcuts in
+certain circumstances, but they cannot be used to do
+everything you might want to do.
+
+This file help on keypresses and tools only.
+For full documentation, print out the accompanying file
+CRISP2.DOC (Word for Windows format).
+
+
+Global hotkeys
+--------------
+Pressing ALT-X will exit the program. If any files need to be saved,
+the program will ask to whether or not this should be done.
+ALT-H brings up this help file, CRISP2.TXT (which must be in the
+same directory as the program itself).
+ALT-D brings up the current directory.
+F9 is the equivalent of clicking on the background (this restores
+the normal palette).
+F10 goes into CGA mode (In case you selected a strange video mode).
+F12 redraws the screen (In case Windows has garbled the screen).
+
+Window shortcuts
+----------------
+In windows with borders around them, pressing ALT-C will close the
+window (if necessary asking if the window should be saved).
+ALT-S will save the file to disk. The arrow keys, pageup, pagedown,
+home, end, ctrl-left and ctrl-right, ctrl-pgup, ctrl-pgdown,
+ctrl-home and ctrl-end will cause the window to scroll.
+ALT-Z will zoom the window into fat pixels mode, whilst ALT-F will
+resize the window full-screen. Alt-B sends the window to the back.
+ALT-L will lock the window if it is a drawing window.
+ALT-U will undo changes if undo is enabled in the preferences dialog
+box and that window can support undo (i.e. is a map window).
+
+
+Dialog boxes
+------------
+In a dialog box:
+  Esc means Cancel
+  ENTER means OK
+  Y means Yes
+  N means No
+
+
+Text Windows
+------------
+In text windows (such as tree windows) pressing the up
+or down arrow keys will alter the current selection, whilst ENTER
+will cause the selection to be used (as if the right mouse button
+were to be clicked on it).
+
+
+File view windows
+-----------------
+In the directory and icon view windows:
+  V means View
+  H means HexEdit
+  C means Copy
+  R means Rename
+  D means Delete
+  X means Convert
+
+
+Brush window
+------------
+The brush window allows you to view/edit the brush pattern.
+Clicking on a pixel with the left or right mouse button will
+increment or decrement that pixel, respectively.
+In the brush window, + and - allow you to view different layers
+of the brush (palettes may be up to four layers deep).
+
+
+HexEdit windows
+---------------
+In HexEdit windows, the cursor keys and TAB affect the position of
+the selection (if there is one). The letter and number keys allow
+you to edit the character at the selection, whilst INS and DEL
+insert and delete bytes respectively from the file.
+
+
+File windows
+------------
+When files are loaded into memory you can edit them in
+differing ways, depending on the type of file.
+The file type is determined by its extension.
+
+For instance:
+TXT and DOC files are standard ASCII text files.
+TSK files contain a list of tasks to execute (in ASCII
+text format)
+
+CHR files consist of 8*8 pixel monochrome characters.
+MLT files consist of 8*8 pixel multicolour or monochrome characters.
+BMP files are C64 multicolour bitmap pictures.
+SPT files are a matrix of 64 commodore 64 hi-resolution sprites.
+SPR files are a matrix of 64 commodore 64 multicolour sprites.
+
+SET files are NES 8*8 pixel 4 colour characters.
+PIC files define a NES displayable screen.
+SF2, SF4 and SF8 files are 4, 16 and 256 colour superfamicom charsets.
+SCH files are 16 colour Sega Megadrive charsets.
+MCH files are 16 colour Sega Master charsets.
+
+LBM and BBM files are 16/256 colour IFF pictures.
+PI1, PC1, PI2 and PI3 files are 16, 16, 4 and 2 colour DEGAS pictures.
+NEO files are 16 colour NEOCHROME pictures.
+TGA files are 32768 colour (16 bit RGB uncompressed) TARGA files.
+
+EGA and VGA files are 16 and 256 colour charsets.
+
+TM2 files are 256 colour shape definition files. They are similar to
+normal 256 colour pictures, but you can step through them using
+the '<' and '>' keys (or ',' and '.').
+
+FRK files are sprite definition and position file (2..256 colours),
+    overlaid on picture files.
+BOX files are box maps, overlaid on picture files.
+MAP, BLK and MP files are block maps, based on another file.
+COP files are copper lists (screen colour definition files) for the Amiga.
+
+
+Drawing windows
+---------------
+LBM, BBM, PI1, PC1, PI2, PI3, NEO, SET,
+PIC, BMP, PIX, ECI, ECB, CHR, MLT, SPR, SPT,
+SF2, SF4, SF8, SCH, MCH, EGA, VGA and QL files
+can be edited within drawing windows.
+
+In drawing windows several keys can be used as shortcuts:
+F1, F2, F3, F4, F5, F6, F7 and F8 change the brush mode of the current
+drawing. 'x', 'X', 'y', 'Y', 'h', 'H' flip, double or halve the brush.
+'j' swaps between the brush and the spare brush.
+'t' and 'o' make the brush transparent around the edges or opaque.
+TAB displays the current mouse coordinates in the System Info window.
+This is in pixels for most windows, or blocks in map windows.
+SHIFT-TAB causes this information to be updated automatically.
+SPACE plots the brush at the current mouse position, in the same way
+as clicking with the left button will.
+ENTER causes the brush to be put down at the same place it was picked
+up from.
+This can be useful when transferring graphics from one picture to
+another, or when altering a picture by using one of the brush commands.
+
+The right mouse button allows you to pick up a brush
+from the picture (by dragging from one corner of
+the area you wish to pick up to the other), whereas the
+left mouse button allows you to draw on the picture with
+the current brush/stencil and fill pattern, using the
+current drawing mode. The current drawing mode for a window is
+displayed on its right hand side.
+
+You can select a drawing mode by clicking on its icon with
+the left mouse button. Clicking with the right mouse button
+will bring up a menu or dialog box relating to that tool.
+
+You can press the number keys 0..9 to set the brush to be a
+1*1*1 brush of that colour. Press several digits to get a
+large brush value (up to 32767).
+Also, + and - increment and decrement the brush.
+You can also click on the colour blobs at the bottom right
+of the window. The arrows underneath the blobs let you select
+which bank of 16 colours you can see there.
+
+Pressing SHIFT-0 ... SHIFT-9 will cause the appropriate bit to
+be toggled in the whole brush. Transparent parts of the brush
+are not affected.
+
+CHR, PIC and BMP files have a Decolour option on their menus,
+which allows them to be quickly changed into a standard
+palette.
+
+MLT files can be viewed either in monochrome or multicolour mode.
+
+The drawing modes currently supported are draw, fill
+lasso, spray and text. Draw, fill and text can be modified by the
+grid option. Draw and fill can be modified by the palette option
+or the attribute option.
+Draw can be modified by the all option or the attribute and all
+options together.
+
+The draw mode allows the brush to be dragged across the picture
+with the left mouse button. Dragging with the right mouse
+button allows you to pick up a brush and fill pattern.
+
+In fill mode, a click with the left mouse button will cause an
+enclosed area to be filled with the current fill pattern.
+Dragging with with the right mouse button allows you to pick up
+a brush (and fill pattern).
+
+The lasso mode grabs an enclosed area into the brush. This
+area is bounded by the background colour. The background colour
+of a drawing is currently defined as the colour of the top-left
+pixel in the drawing. It does not change the fill pattern.
+This pickup is done with the right mouse button. Clicking with
+the left mouse button puts down a copy of the lassoed brush.
+You can drag this around and it will erase itself.
+This is useful for joining up graphical pieces. The area picked
+up has the Transparency brush command applied to it. This can
+be undone with the Opaque option, allowing the background colour
+to be put down.
+
+In spray mode, a click with the left mouse button causes the brush
+to be sprayed around positions close to the mouse position.
+The right mouse button picks up as usual. To spray fill patterns,
+set the brush to a stencil pattern using the stencil menu.
+
+In text mode, a click with the left mouse button causes a text
+cursor position to be set to the correct place. This cursor
+is at the moment invisible!
+Pressing a alphanumeric key will now place text at that position.
+This text is sprayed in the current fill pattern.
+The right mouse button picks up as usual.
+
+The palette option allows you to change the colour attributes
+of a PIC or BMP file. You can use this option in conjunction
+with the draw or fill modes.
+You may find editing the palette data by clicking on the brush
+definition useful. The + and - keys change which part of the
+palette you are viewing. (Usually 1..4 palette layers).
+
+The grid option restricts brush movement to the grid boundaries
+natural to the type of a drawing window, for instance character
+or sprite boundaries.
+This only applies to the draw mode and picking up a brush/fill pattern.
+
+Clicking with the right mouse button on the tool window causes a
+menu or dialog box to appear.
+The draw icon brings up the stencil menu.
+The fill icon brings up the fill patterns menu.
+The spray icon brings up a dialog box allowing you to change the
+aperture of the spray gun.
+The palette icon brings up the RGB or NES (as appropriate)
+  palette dialog.
+The grid icon brings up the grid size dialog box.
+
+
+Map windows
+-----------
+MAP windows must have a character set file specified for them
+in order to display. This is done by selecting a charset file from
+a directory window and using the USE CHARSET menu option on
+the appropriate map window.
+
+Map windows behave like drawing windows in most respects.
+A map window can contain a map window, in which case the child
+map window is a set of 4*4 (for example) blocks made up from characters
+defined by its child. Use the USE CHARSET option again to set this.
+MP files do not remember who their children are or what their own grid-size
+is, but MAP files do. Use the RESIZE GRID option to change the grid-size
+of a map. (This grid-size will become the atomic size for any parents it
+may have.)
+
+Map windows have two drawing options that most drawing windows do not have -
+Attribute and All.
+These can be used together or separately. Attribute works with draw or fill,
+while All just works for draw.
+
+Attribute brings up a screen of white numbers which denote the attribute
+of a block. These can be changed in the usual way with the left and right
+mouse buttons pasting and copying areas.
+
+All allows you to search and replace blocks - put the replacement pattern
+into the brush with a right click and then left click on the blocks you
+wish to replace. All instance of those blocks in the map will be replaced.
+Be careful that the replacement pattern does not include a block which 
+is in the area you are replacing, as the results may not be what you expect!
+With both the All and Attribute options set, you can set all blocks of a
+certain type to have the specified attribute.
+
+You can press 'I' to insert or delete a row or column at the mouse
+pointer position.
+
+
+Object windows
+--------------
+FRK windows are object orientated. You can select a group of
+objects by dragging with either mouse button or move the
+selected objects with either mouse button. Menu options
+affect the selected group. You can paste a bitmap object
+into the map with the PASTE BRUSH menu command, or grab selected
+objects into the brush with the GRAB BRUSH command.
+Colour 0 is transparent.
+You can underlay a picture with the USE PICTURE command.
+  F1 = grid off.
+  F2 = grid on.
+  A aligns the selected sprites to the grid.
+  C copies the selected sprites.
+  D or BACKSPACE or DELETE deletes the selected sprites.
+  G grabs the selected objects into the brush.
+  H hexedits the objects
+  P pastes the brush to the picture.
+  T textedits the object
+  ENTER uses hexedit of textedit according to user preferences.
+  CTRL-BACKSPACE or CTRL-DELETE deletes the selected sprite definitions.
+  , and . select different sprites
+  + and - change the shapes of the selected sprites
+  < and > select groups
+  ALT0 increments group, creating a new one if necessary
+  ALT, animates groups backwards
+  ALT. animates groups forwards
+  ALT/ animates groups forwards and backwards
+  ALT+ inserts a group at the current position
+  ALT- deletes the current group
+  TAB prints up the mouse coordinates.
+  SHIFT-TAB turns on automatic coordinate updating.
+
+
+Box windows
+-----------
+Create a box by dragging with the left button.
+Select a box with the right botton or the < or > (, or .) keys.
+Move or resize a selected box by dragging with the left button
+  from within the selected box.
+Delete the selected box with by pressing the D key.
+  + and - allow you to view different types of box.
+  F1 = grid off
+  F2 = grid on.
+  TAB prints up the mouse coordinates.
+  SHIFT-TAB turns on automatic coordinate updating.
+
+
+Copper windows
+--------------
+To paste a colour selection from the brush, click with the
+left button.
+To select a range and copy it to the brush, drag with the right
+button. A white bar will appear on the left.
+To change a selected range, select a menu option or press
+B for blend, L for lighter, D for darker, W for warmer,
+C for cooler or G for greener.
+T for twice as bright, H for half as bright.
+B, H and T keep colours within the target system limitations.
+You can edit the first colour in the selected range with
+the RGB sliders at the top of the window.
+ENTER gets the selected range into the brush again.
+
+Translate windows
+-----------------
+Esc = cancel
+ENTER = translate
+CTRL-ENTER = one-to-one translate
++ = Increment brush
+- = Decrement brush
+, = Decrement palette number
+. = Increment palette number
+
+===========
+Carl Muller
+14 Mar 1993
+
